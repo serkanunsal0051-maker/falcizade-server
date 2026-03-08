@@ -255,7 +255,7 @@ if(loading) loading.style.display="flex";
 
 try{
 
-const res=await fetch("/fal",{
+const res = await fetch("https://falcizade-server-production.up.railway.app/fal",{
 
 method:"POST",
 
