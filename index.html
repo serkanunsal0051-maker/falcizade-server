@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Falcızade AI Kahve Falı</title>
+
+<link rel="stylesheet" href="style.css">
+<link rel="manifest" href="manifest.json">
+
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<script>
+if ("serviceWorker" in navigator) {
+navigator.serviceWorker.register("service-worker.js");
+}
+</script>
+
+</head>
+
+<body>
+
+<div class="page">
+
+<div class="topBar card">
+<div class="logo">🔮 Falcızade</div>
+
+<div id="userPanelTop" class="userPanel" onclick="handleUserPanelClick()">
+
+<img id="userAvatar" src="" style="width:24px;height:24px;border-radius:50%;display:none;margin-right:6px;">
+
+<span id="userNameText">Giriş</span>
+<span class="arrow">▼</span>
+
+</div>
+
+<div id="userMenu" class="userMenu" style="display:none;">
+
+<button onclick="openProfile()">👤 Profil</button>
+
+<button onclick="toggleHistory()">📜 Fal Geçmişi</button>
+
+<button onclick="openPremium()">⭐ Premium</button>
+
+<button onclick="logoutUser()">🚪 Çıkış</button>
+
+</div>
+
+<button id="logoutBtn" onclick="logoutUser()" style="display:none;">
+Çıkış Yap
+</button>
+
+</div>
+
+<div class="dailyBox card">
+<h3>🔮 Günün Falı</h3>
+<div id="dailyFortune">Bugün güzel gelişmeler olabilir...</div>
+</div>
+
+<div class="header">
+<h1>🔮 Falcızade</h1>
+<p class="subtitle">AI Kahve Falı</p>
+</div>
+
+<div class="container card">
+
+<div class="uploadBox">
+<p>☕ Kahve fincanı fotoğrafını yükle</p>
+<input type="file" id="imageInput" accept="image/*">
+</div>
+
+<div class="cup" id="cupContainer">
+
+<div class="smoke">
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+</div>
+
+<img id="preview" src="" alt="Kahve Fincanı">
+
+</div>
+
+<!-- FAL HAKKI PANELİ DÜZELTİLDİ -->
+
+<div id="falHakPanel" class="falHakPanel">
+Bugün kalan fal hakkın: <span id="falHak">1</span>
+</div>
+
+<div class="buttonRow">
+
+<button class="falButton" onclick="falBak()">Falına Bak</button>
+
+<button class="premiumButton" onclick="openPremium()">
+⭐ Premium
+</button>
+
+</div>
+
+<!-- ÖDÜL BUTONLARI -->
+
+<div class="rewardRow">
+
+<button class="rewardButton" onclick="watchAd()">
+🎬 Reklam İzle +1 Fal
+</button>
+
+<button class="rewardButton share" onclick="openSharePopup()">
+📤 Fal Paylaş +1 Fal
+</button>
+
+</div>
+
+<div id="loading" class="loadingScreen">
+
+<div class="crystalBall"></div>
+
+<p class="loadingText">
+Falcızade ruhları dinliyor...
+</p>
+
+</div>
+
+<div id="result" class="resultBox"></div>
+
+<div class="shareFalBox">
+
+<button onclick="shareFalStory()" class="shareStoryButton">
+📸 Falını Story Olarak Paylaş
+</button>
+
+</div>
+
+<button class="falButton" onclick="openSharePopup()">
+📤 Paylaş
+</button>
+
+<button class="falButton" onclick="toggleHistory()">
+📜 Geçmiş
+</button>
+
+<div id="historyContainer" style="display:none;">
+
+<button onclick="closeHistory()" class="closeHistoryBtn">
+✖ Kapat
+</button>
+
+<div id="history"></div>
+
+</div>
+
+</div>
+
+<div class="footer">
+<p>© 2026 Falcızade</p>
+</div>
+
+</div>
+
+<div id="premiumPopup" class="popup">
+
+<div class="popupContent premiumBox">
+
+<h2>⭐ Premium Seç</h2>
+
+<div class="premiumPlan">
+<h3>₺99 / hafta</h3>
+<p>Premium erişim</p>
+<button onclick="buyPremium('weekly')">Haftalık Al</button>
+</div>
+
+<div class="premiumPlan">
+<h3>₺299 / ay</h3>
+<p>En popüler plan</p>
+<button onclick="buyPremium('monthly')">Aylık Al</button>
+</div>
+
+<div class="premiumPlan premiumBest">
+<h3>🔥 ₺1999 / yıl</h3>
+<p>₺3588 yerine</p>
+<button onclick="buyPremium('yearly')">Yıllık Al</button>
+</div>
+
+<button class="closeButton" onclick="closePremium()">
+Kapat
+</button>
+
+</div>
+
+</div>
+
+<div id="sharePopup" class="popup">
+
+<div class="popupContent">
+
+<h3>Falı Paylaş</h3>
+
+<button onclick="shareWhatsApp()">WhatsApp</button>
+<button onclick="shareFacebook()">Facebook</button>
+<button onclick="shareTwitter()">Twitter</button>
+<button onclick="shareInstagram()">Instagram</button>
+<button onclick="shareTikTok()">TikTok</button>
+<button onclick="copyFal()">Linki Kopyala</button>
+
+<button onclick="closeSharePopup()" class="closeButton">
+Kapat
+</button>
+
+</div>
+
+</div>
+
+<div id="storyExport" class="storyExport">
+
+<div class="storyHeader">
+🔮 Falcızade
+</div>
+
+<div id="storyContent" class="storyCard"></div>
+
+<div class="storyFooter">
+Falcızade ile falına bak!
+</div>
+
+</div>
+
+<script src="app.js"></script>
+
+<script>
+
+function openPremium(){
+document.getElementById("premiumPopup").style.display="flex";
+}
+
+function closePremium(){
+document.getElementById("premiumPopup").style.display="none";
+}
+
+</script>
+
+<div id="authPopup" class="popup">
+
+<div class="popupContent">
+
+<h3>Falcızade Giriş</h3>
+
+<div id="g_id_onload"
+data-client_id="998476016860-9s4nrpr53h1eq51ofp038negachgrf03.apps.googleusercontent.com"
+data-callback="handleGoogleLogin">
+</div>
+
+<div class="g_id_signin"></div>
+
+<input type="text" id="loginName" placeholder="Adınız" style="display:none;">
+
+<input type="email" id="loginEmail" placeholder="E-posta">
+
+<input type="password" id="loginPass" placeholder="Şifre">
+
+<button onclick="loginUser()">Giriş Yap</button>
+
+<p class="forgotPass" onclick="forgotPassword()">
+Şifremi unuttum
+</p>
+
+<p>Hesabın yok mu?</p>
+
+<button onclick="showRegister()">Üye Ol</button>
+
+<button onclick="closeAuth()">Kapat</button>
+
+</div>
+
+</div>
+
+<div id="profilePopup" class="popup" style="display:none;">
+
+<div class="popupContent">
+
+<h2>👤 Profil</h2>
+
+<p><b>İsim:</b> <span id="profileName"></span></p>
+
+<p><b>Email:</b> <span id="profileEmail"></span></p>
+
+<p><b>🔮 Toplam Fal:</b> <span id="profileFalCount"></span></p>
+
+<p><b>⭐ Premium:</b> <span id="profilePremium"></span></p>
+
+<button onclick="logoutUser()">🚪 Çıkış Yap</button>
+
+<button onclick="closeProfile()" class="closeButton">
+Kapat
+</button>
+
+</div>
+
+</div>
+
+</body>
+</html>

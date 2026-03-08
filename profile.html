@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+<meta charset="UTF-8">
+<title>Profil</title>
+</head>
+
+<body>
+
+<h1>👤 Profil</h1>
+
+<p>İsim: <span id="name"></span></p>
+<p>Email: <span id="email"></span></p>
+
+<button onclick="logout()">Çıkış Yap</button>
+
+<script>
+
+const user = JSON.parse(localStorage.getItem("user"));
+
+if(user){
+
+document.getElementById("name").innerText = user.name;
+document.getElementById("email").innerText = user.email;
+
+}
+
+function logout(){
+
+localStorage.removeItem("user");
+location.href="/";
+
+}
+
+</script>
+
+</body>
+
+</html>

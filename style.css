@@ -1,0 +1,530 @@
+:root {
+  --bg: #11061f;
+  --bg-soft: #1b0c2f;
+  --card: rgba(33, 20, 56, 0.75);
+  --card-border: rgba(255, 255, 255, 0.15);
+  --gold: #ffd166;
+  --accent: #ff4dba;
+  --accent-2: #7d7dff;
+  --text: #f6f0ff;
+  --muted: #cbb9e6;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Inter", "Segoe UI", Arial, sans-serif;
+  background: radial-gradient(circle at center, #2e1754 0%, #11061f 60%, #07030f 100%);
+  color: var(--text);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.page {
+  width: 100%;
+  max-width: 460px;
+  display: grid;
+  gap: 14px;
+  margin: auto;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: 22px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.35);
+}
+
+.topBar {
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  position: relative;
+  z-index: 10000;
+}
+
+.logo {
+  font-weight: 700;
+}
+
+.userPanel {
+  font-size: 13px;
+  color: var(--muted);
+  background: rgba(255,255,255,0.08);
+  border-radius: 999px;
+  padding: 6px 12px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.container {
+  padding: 18px;
+}
+
+.uploadBox {
+  border: 2px dashed var(--gold);
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.uploadBox p {
+  margin: 0 0 10px;
+  color: var(--gold);
+}
+
+#imageInput {
+  width: 100%;
+}
+
+.cup {
+  display: grid;
+  justify-items: center;
+  margin: 10px 0;
+}
+
+#preview {
+  width: 220px;
+  height: 220px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid rgba(255,255,255,0.2);
+}
+
+.buttonRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+button {
+  border: none;
+  border-radius: 14px;
+  padding: 12px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.falButton {
+  background: linear-gradient(135deg,var(--gold),#ffea99);
+}
+
+.premiumButton {
+  background: linear-gradient(135deg,var(--accent),#ff9f43);
+  color:white;
+}
+
+.resultBox {
+  margin-top:16px;
+  background: linear-gradient(160deg, rgba(106,61,177,0.65), rgba(51,18,94,0.65));
+  padding:18px;
+  border-radius:16px;
+}
+
+.fortuneSlide {
+  display:none;
+}
+
+.fortuneSlide.active {
+  display:block;
+}
+
+.fortuneControls {
+  margin-top:12px;
+  display:flex;
+  justify-content:flex-end;
+  gap:10px;
+}
+
+.fortuneControls button{
+  width:44px;
+  height:44px;
+}
+
+/* STORY PAYLAŞ */
+
+.shareCard{
+background:#2a1245;
+padding:30px;
+border-radius:16px;
+width:420px;
+max-width:92%;
+text-align:center;
+color:white;
+border:2px solid var(--gold);
+}
+
+.shareFalBox{
+margin-top:12px;
+}
+
+.shareStoryButton{
+width:100%;
+background:linear-gradient(135deg,var(--accent),#ff9f43);
+color:white;
+}
+
+/* GEÇMİŞ */
+
+.historyCard{
+background:rgba(255,255,255,0.06);
+padding:12px;
+border-radius:10px;
+margin-top:8px;
+}
+
+/* STORY VIEWER */
+
+#storyViewer{
+display:none;
+position:fixed;
+inset:0;
+background:black;
+color:white;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+font-size:22px;
+text-align:center;
+padding:40px;
+z-index:9999;
+}
+
+#storyBar{
+position:absolute;
+top:20px;
+left:10%;
+width:80%;
+height:5px;
+background:#444;
+}
+
+#storyCounter{
+position:absolute;
+top:40px;
+right:10%;
+font-size:14px;
+}
+
+#storyText{
+max-width:420px;
+line-height:1.6;
+}
+
+/* POPUP */
+
+.popup{
+display:none;
+position:fixed;
+inset:0;
+background:rgba(0,0,0,0.8);
+align-items:center;
+justify-content:center;
+}
+
+.popupContent{
+background:#1d1131;
+padding:20px;
+border-radius:16px;
+width:320px;
+display:grid;
+gap:10px;
+}
+
+.popupContent input,
+.popupContent select{
+padding:10px;
+border-radius:10px;
+border:none;
+}
+
+.footer{
+text-align:center;
+font-size:12px;
+color:#b8a6d8;
+margin-top:10px;
+}
+
+
+/* ÖDÜL BUTONLARI */
+
+.rewardRow{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
+margin-top:12px;
+}
+
+.rewardButton{
+background:linear-gradient(135deg,#6a3cff,#8e5bff);
+color:white;
+padding:12px;
+border-radius:14px;
+font-weight:bold;
+box-shadow:0 6px 20px rgba(0,0,0,0.3);
+transition:0.2s;
+}
+
+.rewardButton:hover{
+transform:scale(1.05);
+}
+
+.rewardButton.share{
+background:linear-gradient(135deg,#ff4da6,#ff8a5b);
+}
+
+
+/* LOADING EKRANI */
+
+.loadingScreen{
+display:none;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+margin-top:15px;
+}
+
+.loadingText{
+margin-top:10px;
+font-size:14px;
+color:#e0d4ff;
+}
+
+/* STORY EXPORT (9:16) */
+
+.storyExport{
+
+position:fixed;
+top:0;
+left:0;
+
+width:1080px;
+height:1920px;
+
+/* ARKA PLAN */
+
+background:linear-gradient(135deg,#ff4dba,#ff9f43);
+
+display:none;
+
+flex-direction:column;
+justify-content:center;
+align-items:center;
+
+padding:120px;
+
+color:white;
+text-align:center;
+
+z-index:99999;
+
+}
+
+.storyHeader{
+
+font-size:140px;
+font-weight:bold;
+
+margin-bottom:90px;
+
+}
+
+.storyFooter{
+
+font-size:70px;
+font-weight:bold;
+
+margin-top:90px;
+
+}
+
+.storyCard{
+
+background:#000 !important; /* içi siyah */
+
+color:#ffd166; /* yazılar sarı */
+
+width:92%;
+height:65%;
+
+border-radius:50px;
+
+padding:80px;
+
+/* siyah çerçeve */
+
+border:12px solid #000;
+
+box-shadow:0 0 40px rgba(255,209,102,0.6),
+           0 40px 120px rgba(0,0,0,0.6);
+
+display:flex;
+flex-direction:column;
+justify-content:center;
+
+font-size:46px;
+line-height:1.7;
+
+}
+
+.storyCard h3{
+color:#ffd166;
+font-size:60px;
+}
+
+.storyCard .fortuneViewer{
+background:transparent !important;
+border:none !important;
+box-shadow:none !important;
+}
+
+/* STORY KARTINI TEK RENK YAP */
+
+.storyCard .fortuneSlide{
+background:transparent !important;
+}
+
+.storyCard .fortuneViewer{
+background:transparent !important;
+border:none !important;
+box-shadow:none !important;
+}
+
+/* STORY SLIDE FIX */
+
+.storyCard .fortuneSlide{
+display:block !important;
+width:100% !important;
+background:transparent !important;
+text-align:center;
+}
+
+.storyCard .fortuneControls{
+display:none !important;
+}
+
+.storyCard #storyCounter{
+display:none !important;
+}
+
+#historyContainer{
+
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:#0f0f1a;
+z-index:9999;
+padding:60px 20px 20px 20px;
+overflow:auto;
+}
+
+.historyItem{
+
+width:100%;
+background:#2a2140;
+padding:12px;
+margin-bottom:10px;
+border-radius:10px;
+cursor:pointer;
+color:white;
+font-size:14px;
+text-align:left;
+
+}
+
+.closeHistoryBtn{
+
+position:fixed;
+top:20px;
+right:20px;
+padding:10px 16px;
+border:none;
+background:#ff6b00;
+color:white;
+border-radius:8px;
+font-size:16px;
+cursor:pointer;
+
+}
+
+.closeFalBtn{
+position:absolute;
+top:10px;
+right:10px;
+background:#ff4d4d;
+color:white;
+border:none;
+border-radius:8px;
+padding:6px 10px;
+cursor:pointer;
+font-weight:bold;
+}
+
+.falMetin{
+position:relative;
+padding-top:10px;
+}
+
+.dailyBox{
+padding:16px;
+text-align:center;
+}
+
+.header{
+text-align:center;
+}
+
+.subtitle{
+opacity:0.8;
+font-size:14px;
+}
+
+.forgotPass{
+text-align:center;
+font-size:13px;
+cursor:pointer;
+opacity:0.8;
+}
+
+.forgotPass:hover{
+opacity:1;
+text-decoration:underline;
+}
+
+.userMenu{
+position:absolute;
+top:60px;
+right:20px;
+background:#1b1030;
+border-radius:12px;
+padding:10px;
+display:flex;
+flex-direction:column;
+gap:6px;
+z-index:99999;
+}
+
+.userMenu button{
+background:none;
+border:none;
+color:white;
+padding:8px 12px;
+text-align:left;
+cursor:pointer;
+border-radius:8px;
+}
+
+.userMenu button:hover{
+background:rgba(255,255,255,0.1);
+}
