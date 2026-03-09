@@ -264,7 +264,7 @@ headers:{"Content-Type":"application/json"},
 body:JSON.stringify({
 
 image:base64Image,
-user:"guest"
+user:"mobile_user"
 
 })
 
