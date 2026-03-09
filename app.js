@@ -465,84 +465,15 @@ document.getElementById("result").innerHTML="";
 
 window.watchAd=function(){
 
-let adData=getAdData();
+if (typeof Android !== "undefined") {
 
-if(adData.count>=6){
+    Android.showAd();
 
-alert("Bugün maksimum 6 reklam izledin.");
+} else {
 
-return;
-
-}
-
-/* REKLAM EKRANI */
-
-const ad=document.createElement("div");
-
-ad.style.position="fixed";
-ad.style.top="0";
-ad.style.left="0";
-ad.style.width="100%";
-ad.style.height="100%";
-ad.style.background="black";
-ad.style.display="flex";
-ad.style.flexDirection="column";
-ad.style.alignItems="center";
-ad.style.justifyContent="center";
-ad.style.color="white";
-ad.style.zIndex="9999";
-
-ad.innerHTML=`
-
-<h2 style="margin-bottom:20px;">🎬 Reklam İzleniyor</h2>
-
-<p style="opacity:0.8;margin-bottom:30px;">
-Reklam tamamlanınca fal hakkı kazanacaksın
-</p>
-
-<div style="width:200px;height:10px;background:#333;border-radius:10px;overflow:hidden;">
-<div id="rewardBar" style="width:0%;height:100%;background:#ff6b00;"></div>
-</div>
-
-`;
-
-document.body.appendChild(ad);
-
-let progress=0;
-
-const timer=setInterval(()=>{
-
-progress+=5;
-
-document.getElementById("rewardBar").style.width=progress+"%";
-
-if(progress>=100){
-
-clearInterval(timer);
-
-document.body.removeChild(ad);
-
-/* REKLAM SAYACI */
-
-adData.count++;
-
-localStorage.setItem("adData",JSON.stringify(adData));
-
-/* FAL HAKKI EKLE */
-
-let falHak=parseInt(localStorage.getItem("falHak"))||0;
-
-falHak++;
-
-localStorage.setItem("falHak",falHak);
-
-updateFalHakUI();
-
-alert("🎉 Reklam tamamlandı +1 fal kazandın");
+    alert("Bu özellik sadece mobil uygulamada çalışır.");
 
 }
-
-},200);
 
 }
 

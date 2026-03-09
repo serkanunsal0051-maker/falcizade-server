@@ -1,11 +1,37 @@
+const admin = require("firebase-admin");
+
+const serviceAccount = require("./firebase-key.json");
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+});
+
 const sqlite3 = require("sqlite3").verbose();
 const db = new sqlite3.Database("./falcizade.db");
+
+db.run(`
+CREATE TABLE IF NOT EXISTS fal_rights (
+  user_id INTEGER,
+  date TEXT,
+  free_rights INTEGER DEFAULT 1,
+  ad_rights INTEGER DEFAULT 0,
+  PRIMARY KEY (user_id, date)
+)
+`);
 
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
 const OpenAI = require("openai");
 const crypto = require("crypto");
+const cron = require("node-cron");
+
+const multer = require("multer");
+const fs = require("fs");
+
+const upload = multer({
+  dest: "uploads/"
+});
 
 process.on("uncaughtException", err => {
 console.error("UNCAUGHT ERROR:", err);
@@ -16,6 +42,85 @@ console.error("PROMISE ERROR:", err);
 });
 
 const app = express();
+
+function getToday() {
+  return new Date().toISOString().split("T")[0];
+}
+
+async function checkFalRights(userId) {
+
+  const today = getToday();
+
+  return new Promise((resolve, reject) => {
+
+    db.get(
+      "SELECT * FROM fal_rights WHERE user_id=? AND date=?",
+      [userId, today],
+      (err, row) => {
+
+        if (err) return reject(err);
+
+        // Eğer bugün kayıt yoksa oluştur
+        if (!row) {
+
+          db.run(
+            "INSERT INTO fal_rights (user_id,date,free_rights,ad_rights) VALUES (?,?,1,0)",
+            [userId, today]
+          );
+
+          resolve({
+            free: 1,
+            ad: 0
+          });
+
+        } else {
+
+          resolve({
+            free: row.free_rights,
+            ad: row.ad_rights
+          });
+
+        }
+
+      }
+    );
+
+  });
+
+}
+
+function useFalRight(userId) {
+
+  const today = getToday();
+
+  db.get(
+    "SELECT * FROM fal_rights WHERE user_id=? AND date=?",
+    [userId, today],
+    (err, row) => {
+
+      if (err) return;
+      if (!row) return;
+
+      if (row.free_rights > 0) {
+
+        db.run(
+          "UPDATE fal_rights SET free_rights = free_rights - 1 WHERE user_id=? AND date=?",
+          [userId, today]
+        );
+
+      } else if (row.ad_rights > 0) {
+
+        db.run(
+          "UPDATE fal_rights SET ad_rights = ad_rights - 1 WHERE user_id=? AND date=?",
+          [userId, today]
+        );
+
+      }
+
+    }
+  );
+
+}
 
 app.use(cors());
 app.use(express.json({ limit: "50mb" }));
@@ -38,6 +143,42 @@ const openai = new OpenAI({
 apiKey: process.env.OPENAI_API_KEY
 });
 
+// 🔔 PUSH BİLDİRİM GÖNDERME
+function sendNotification(token,title,body){
+
+const message = {
+notification:{
+title:title,
+body:body
+},
+token:token
+};
+
+admin.messaging().send(message)
+.then(()=>{
+console.log("Bildirim gönderildi");
+})
+.catch(err=>{
+console.log("Notification error:",err);
+});
+
+}
+
+function sendNotificationToAll(title,body){
+
+db.all("SELECT token FROM device_tokens",(err,rows)=>{
+
+if(err || !rows) return;
+
+rows.forEach(r=>{
+
+sendNotification(r.token,title,body);
+
+});
+
+});
+
+}
 
 /* STORY PARÇALAMA */
 
@@ -85,6 +226,14 @@ last_fal_date TEXT
 )
 `);
 
+db.run(`
+CREATE TABLE IF NOT EXISTS device_tokens(
+id INTEGER PRIMARY KEY AUTOINCREMENT,
+email TEXT,
+token TEXT
+)
+`);
+
 try{
 db.run(`ALTER TABLE users ADD COLUMN premium_plan TEXT`);
 }catch(e){}
@@ -113,6 +262,18 @@ try{
 
 const image=req.body.image;
 const user=req.body.user || "guest";
+
+const rights = await checkFalRights(user);
+
+const totalRights = rights.free + rights.ad;
+
+if(totalRights <= 0){
+
+  return res.json({
+    error:"FAL_HAKKI_BITTI"
+  });
+
+}
 
 if(!image){
 return res.json({
@@ -216,6 +377,10 @@ db.run(
 
 const stories = splitFalStory(fortuneText);
 
+if(!isPremium){
+useFalRight(user);
+}
+
 res.json({
 fortune:fortuneText,
 stories:stories,
@@ -235,6 +400,68 @@ fortune:"Fal analiz edilirken hata oluştu"
 }
 
 });
+
+});
+
+app.post("/upload-fal", upload.single("photo"), async (req, res) => {
+
+  try {
+
+    const filePath = req.file.path;
+
+    console.log("Fotoğraf geldi:", filePath);
+
+    const imageBuffer = fs.readFileSync(filePath);
+    const base64Image = "data:image/jpeg;base64," + imageBuffer.toString("base64");
+
+    const response = await openai.responses.create({
+      model: "gpt-4o-mini",
+      input: [{
+        role: "user",
+        content: [
+          {
+            type: "input_text",
+            text: `
+Bu kahve fincanındaki telve şekillerini incele.
+
+Gerçek bir Türk kahvesi falcısı gibi yorum yap.
+
+### Aşk
+### Para
+### Yol
+### Haber
+### Genel Yorum
+`
+          },
+          {
+            type: "input_image",
+            image_url: base64Image
+          }
+        ]
+      }]
+    });
+
+    let fortuneText = "Fal oluşturulamadı";
+
+    if(response.output && response.output[0].content){
+      fortuneText = response.output[0].content[0].text;
+    }
+
+    fs.unlinkSync(filePath);
+
+    res.json({
+      fortune: fortuneText
+    });
+
+  } catch(err){
+
+    console.log(err);
+
+    res.json({
+      fortune: "Fal analiz edilirken hata oluştu"
+    });
+
+  }
 
 });
 
@@ -340,4 +567,97 @@ db.run(
 
 res.json({status:"premium activated"});
 
+});
+
+app.post("/reward-ad",(req,res)=>{
+
+const {user}=req.body;
+
+const today = getToday();
+
+db.get(
+"SELECT * FROM fal_rights WHERE user_id=? AND date=?",
+[user,today],
+(err,row)=>{
+
+// GÜNLÜK REKLAM LİMİTİ
+if(row && row.ad_rights >= 6){
+return res.json({
+error:"REKLAM_LIMIT"
+});
+}
+
+// Eğer bugün hiç kayıt yoksa
+if(!row){
+
+db.run(
+"INSERT INTO fal_rights (user_id,date,free_rights,ad_rights) VALUES (?,?,0,1)",
+[user,today]
+);
+
+return res.json({success:true});
+
+}
+
+// Eğer kayıt varsa reklam hakkını arttır
+db.run(
+"UPDATE fal_rights SET ad_rights = ad_rights + 1 WHERE user_id=? AND date=?",
+[user,today]
+);
+
+res.json({success:true});
+
+});
+
+});
+
+app.post("/save-token",(req,res)=>{
+
+const {email,token} = req.body;
+
+if(!email || !token){
+return res.json({success:false});
+}
+
+db.run(
+"INSERT INTO device_tokens (email,token) VALUES (?,?)",
+[email,token],
+function(err){
+
+if(err){
+return res.json({success:false});
+}
+
+res.json({success:true});
+
+});
+
+});
+
+// 🔔 TÜRKİYE SAATİNE GÖRE BİLDİRİM
+
+cron.schedule("0 12 * * *", () => {
+
+console.log("Öğle bildirimi gönderiliyor");
+
+sendNotificationToAll(
+"🔮 Bugün falın seni bekliyor!",
+"Fincanını çevir ve falına bak ☕"
+);
+
+}, {
+timezone: "Europe/Istanbul"
+});
+
+cron.schedule("0 20 * * *", () => {
+
+console.log("Akşam bildirimi gönderiliyor");
+
+sendNotificationToAll(
+"☕ Fincanını çevirdin mi?",
+"Falın seni bekliyor 🔮"
+);
+
+}, {
+timezone: "Europe/Istanbul"
 });
