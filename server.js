@@ -11,6 +11,7 @@ const cron = require("node-cron");
 const app = express();
 
 app.use(cors());
+app.use(express.static(__dirname));
 app.use(express.json({limit:"50mb"}));
 app.use(express.urlencoded({limit:"50mb",extended:true}));
 
@@ -133,7 +134,7 @@ db.run(
 /* ---------------- ROOT ---------------- */
 
 app.get("/",(req,res)=>{
-res.send("Falcizade server running");
+res.sendFile(__dirname + "/index.html");
 });
 
 app.get("/health",(req,res)=>{
