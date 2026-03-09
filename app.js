@@ -270,11 +270,17 @@ user:"mobile_user"
 
 });
 
-const data=await res.json();
+const data = await res.json();
 
 if(loading) loading.style.display="none";
 
-const fortune=data.fortune || "Fal alınamadı";
+// fal hakkı bittiyse
+if(data.error === "FAL_HAKKI_BITTI"){
+    alert("Fal hakkın bitti. Reklam izle 🎬");
+    return;
+}
+
+const fortune = data.fortune || "Fal alınamadı";
 
 /* GEÇMİŞ */
 
