@@ -1,11 +1,3 @@
-const admin = require("firebase-admin");
-
-const serviceAccount = require("./firebase-key.json");
-
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
-});
-
 const sqlite3 = require("sqlite3").verbose();
 const db = new sqlite3.Database("./falcizade.db");
 
@@ -145,23 +137,7 @@ apiKey: process.env.OPENAI_API_KEY
 
 // 🔔 PUSH BİLDİRİM GÖNDERME
 function sendNotification(token,title,body){
-
-const message = {
-notification:{
-title:title,
-body:body
-},
-token:token
-};
-
-admin.messaging().send(message)
-.then(()=>{
-console.log("Bildirim gönderildi");
-})
-.catch(err=>{
-console.log("Notification error:",err);
-});
-
+  console.log("Notification disabled");
 }
 
 function sendNotificationToAll(title,body){
@@ -398,6 +374,8 @@ fortune:"Fal analiz edilirken hata oluştu"
 });
 
 }
+
+});
 
 });
 
