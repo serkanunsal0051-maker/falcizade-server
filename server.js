@@ -381,6 +381,8 @@ fortune:"Fal analiz edilirken hata oluştu"
 
 });
 
+});
+
 app.post("/upload-fal", upload.single("photo"), async (req, res) => {
 
   try {
