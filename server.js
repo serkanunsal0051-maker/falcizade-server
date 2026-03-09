@@ -85,6 +85,14 @@ last_fal_date TEXT
 )
 `);
 
+try{
+db.run(`ALTER TABLE users ADD COLUMN premium_plan TEXT`);
+}catch(e){}
+
+try{
+db.run(`ALTER TABLE users ADD COLUMN premium_expire INTEGER`);
+}catch(e){}
+
 db.run(`
 CREATE TABLE IF NOT EXISTS fortunes(
 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -96,7 +104,6 @@ date TEXT
 `);
 
 });
-
 
 /* FAL ANALİZ */
 
@@ -111,6 +118,23 @@ if(!image){
 return res.json({
 fortune:"Resim bulunamadı"
 });
+}
+
+db.get(
+"SELECT premium_expire FROM users WHERE email=?",
+[user],
+async (err,row)=>{
+
+let isPremium=false;
+
+if(row && row.premium_expire > Date.now()){
+isPremium=true;
+}
+
+if(isPremium){
+console.log("Premium kullanıcı - reklam yok");
+}else{
+console.log("Normal kullanıcı - reklam var");
 }
 
 /* HASH */
@@ -138,8 +162,6 @@ cached:true
 
 try{
 
-/* OPENAI */
-
 const response = await openai.responses.create({
 
 model:"gpt-4o-mini",
@@ -153,8 +175,6 @@ text:`
 Bu kahve fincanındaki telve şekillerini incele.
 
 Gerçek bir Türk kahvesi falcısı gibi yorum yap.
-
-Yorumu şu formatta yaz:
 
 ### Aşk
 ...
@@ -181,28 +201,17 @@ image_url:image
 
 });
 
-/* AI cevap düzeltmesi */
-
 let fortuneText="Fal oluşturulamadı.";
 
 if(response.output && response.output[0] && response.output[0].content){
-
 fortuneText=response.output[0].content[0].text;
-
 }
 
 const date=new Date().toISOString();
 
-/* DATABASE */
-
 db.run(
 "INSERT INTO fortunes (user,fortune,image_hash,date) VALUES (?,?,?,?)",
-[user,fortuneText,hash,date],
-(err)=>{
-if(err){
-console.log("DB ERROR:",err);
-}
-}
+[user,fortuneText,hash,date]
 );
 
 const stories = splitFalStory(fortuneText);
@@ -227,20 +236,7 @@ fortune:"Fal analiz edilirken hata oluştu"
 
 });
 
-}
-
-catch(e){
-
-console.log("SERVER ERROR:",e);
-
-res.json({
-fortune:"Server hatası oluştu"
 });
-
-}
-
-});
-
 
 /* FAL GEÇMİŞİ */
 
@@ -317,26 +313,31 @@ res.json({success:true});
 
 /* PREMIUM */
 
-app.post("/buy-premium",(req,res)=>{
-
-const email=req.body.email;
-
-db.run(
-"UPDATE users SET premium=1 WHERE email=?",
-[email],
-()=>{
-
-res.json({success:true});
-
-});
-
-});
-
-
 /* SERVER */
 
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, "0.0.0.0", () => {
 console.log("Server running on port " + PORT);
+});
+
+app.post("/buy-premium",(req,res)=>{
+
+const {email,plan}=req.body;
+
+let days=0;
+
+if(plan==="weekly") days=7;
+if(plan==="monthly") days=30;
+if(plan==="yearly") days=365;
+
+const expire = Date.now() + days*24*60*60*1000;
+
+db.run(
+"UPDATE users SET premium_plan=?, premium_expire=? WHERE email=?",
+[plan,expire,email]
+);
+
+res.json({status:"premium activated"});
+
 });
