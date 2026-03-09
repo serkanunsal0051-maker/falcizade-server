@@ -864,3 +864,21 @@ function closeProfile(){
 document.getElementById("profilePopup").style.display="none";
 
 }
+
+/* ----------------------- */
+/* ANDROID REKLAM ÖDÜLÜ */
+/* ----------------------- */
+
+function onAdReward(){
+
+let falHak = parseInt(localStorage.getItem("falHak")) || 0
+
+falHak++
+
+localStorage.setItem("falHak", falHak)
+
+updateFalHakUI()
+
+alert("🎉 Reklam tamamlandı +1 fal kazandın")
+
+}
