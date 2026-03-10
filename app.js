@@ -179,7 +179,7 @@ return;
 
 if(typeof Android !== "undefined"){
 
-Android.showAd();
+Android.showAdFal();
 
 }else{
 
@@ -434,7 +434,7 @@ window.watchAd=function(){
 
 if (typeof Android !== "undefined") {
 
-    Android.showAd();
+    Android.showAdReward();
 
 } else {
 
