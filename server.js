@@ -104,6 +104,39 @@ function today(){
 return new Date().toISOString().split("T")[0];
 }
 
+async function checkFalHak(userId){
+
+let user = await User.findOne({userId:userId});
+
+const todayDate = today();
+
+if(!user){
+
+user = new User({
+userId:userId,
+falHak:1,
+lastReset:todayDate
+});
+
+await user.save();
+
+return user;
+
+}
+
+if(user.lastReset !== todayDate){
+
+user.falHak = 1;
+user.lastReset = todayDate;
+
+await user.save();
+
+}
+
+return user;
+
+}
+
 function checkFalRights(user){
 
 return new Promise((resolve,reject)=>{
