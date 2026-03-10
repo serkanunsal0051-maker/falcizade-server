@@ -139,9 +139,6 @@ await user.save();
 
 }
 
-user.falHak = 10;
-await user.save();
-
 return user;
 
 }
