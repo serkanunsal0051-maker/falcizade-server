@@ -24,8 +24,8 @@ const User = mongoose.model("User", {
 
   falGecmisi: [
     {
-      tarih: String,
-      yorum: String
+      fortune: String,
+      date: String
     }
   ]
 
@@ -262,6 +262,26 @@ db.run(
 [user,fortune,hash,new Date().toISOString()]
 );
 
+// MongoDB'ye fal kaydet
+
+let userDoc = await User.findOne({userId:user});
+
+if(!userDoc){
+
+userDoc = new User({
+userId:user,
+falGecmisi:[]
+});
+
+}
+
+userDoc.falGecmisi.unshift({
+fortune: fortune,
+date: new Date().toISOString()
+});
+
+await userDoc.save();
+
 useFalRight(user);
 
 res.json({
@@ -321,20 +341,19 @@ error:"upload error"
 
 /* ---------------- HISTORY ---------------- */
 
-app.get("/history",(req,res)=>{
+app.get("/history", async (req,res)=>{
 
-const email=req.query.email || "guest";
+const user = req.query.user;
 
-db.all(
-"SELECT * FROM fortunes WHERE user=? ORDER BY id DESC LIMIT 20",
-[email],
-(err,rows)=>{
+const userDoc = await User.findOne({userId:user});
 
-if(err) return res.json([]);
+if(!userDoc){
 
-res.json(rows);
+return res.json([]);
 
-});
+}
+
+res.json(userDoc.falGecmisi.slice(0,20));
 
 });
 
