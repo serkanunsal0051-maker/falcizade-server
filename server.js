@@ -22,6 +22,11 @@ const User = mongoose.model("User", {
     default: false
   },
 
+adWatchCount:{
+  type:Number,
+  default:0
+},
+
   falGecmisi: [
     {
       fortune: String,
@@ -128,6 +133,7 @@ if(user.lastReset !== todayDate){
 
 user.falHak = 1;
 user.lastReset = todayDate;
+user.adWatchCount = 0;
 
 await user.save();
 
@@ -222,7 +228,7 @@ const userId = req.body.user || "guest";
 
 const user = await checkFalHak(userId);
 
-if(user.falHak <= 0){
+if(!user.premium && user.falHak <= 0){
 
 return res.json({
 error:"FAL_HAKKI_BITTI"
@@ -315,8 +321,10 @@ date: new Date().toISOString()
 
 await userDoc.save();
 
+if(!user.premium){
 user.falHak--;
 await user.save();
+}
 
 res.json({
 fortune:fortune,
@@ -459,38 +467,26 @@ res.json({success:true});
 
 /* ---------------- REWARD AD ---------------- */
 
-app.post("/reward-ad",(req,res)=>{
+app.post("/reward-ad",async(req,res)=>{
 
-const user=req.body.user;
+const userId = req.body.user;
 
-db.get(
-"SELECT * FROM fal_rights WHERE user_id=? AND date=?",
-[user,today()],
-(err,row)=>{
+let user = await User.findOne({userId:userId});
 
-if(row && row.ad_rights>=6){
+if(!user){
+return res.json({error:"USER_NOT_FOUND"});
+}
+
+if(user.adWatchCount >= 6){
 return res.json({error:"REKLAM_LIMIT"});
 }
 
-if(!row){
+user.falHak++;
+user.adWatchCount++;
 
-db.run(
-"INSERT INTO fal_rights(user_id,date,free_rights,ad_rights) VALUES(?,?,0,1)",
-[user,today()]
-);
-
-}else{
-
-db.run(
-"UPDATE fal_rights SET ad_rights=ad_rights+1 WHERE user_id=? AND date=?",
-[user,today()]
-);
-
-}
+await user.save();
 
 res.json({success:true});
-
-});
 
 });
 
