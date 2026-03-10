@@ -246,9 +246,6 @@ async (err,row)=>{
 
 if(row){
 
-user.falHak--;
-await user.save();
-
 return res.json({
 fortune:row.fortune,
 cached:true
@@ -319,6 +316,9 @@ date: new Date().toISOString()
 await userDoc.save();
 
 useFalRight(user);
+
+user.falHak--;
+await user.save();
 
 res.json({
 fortune:fortune,
