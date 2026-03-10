@@ -494,6 +494,11 @@ const userId = req.body.user;
 
 let user = await User.findOne({userId:userId});
 
+if(user){
+user.falHak = 10;
+await user.save();
+}
+
 if(!user){
 return res.json({error:"USER_NOT_FOUND"});
 }
