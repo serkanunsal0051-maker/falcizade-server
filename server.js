@@ -252,6 +252,11 @@ async (err,row)=>{
 
 if(row){
 
+if(!user.premium){
+user.falHak--;
+await user.save();
+}
+
 return res.json({
 fortune:row.fortune,
 cached:true
