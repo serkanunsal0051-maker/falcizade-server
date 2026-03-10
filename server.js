@@ -15,6 +15,11 @@ const User = mongoose.model("User", {
     default: 1
   },
 
+lastAdWatch:{
+  type:Number,
+  default:0
+},
+
   lastReset: String,
 
   premium: {
@@ -119,7 +124,7 @@ if(!user){
 
 user = new User({
 userId:userId,
-falHak:10,
+falHak:1,
 lastReset:todayDate
 });
 
@@ -130,7 +135,7 @@ return user;
 }
 
 // TEST İÇİN FAL HAKKINI ZORLA 10 YAP
-user.falHak = 10;
+user.falHak = 1;
 user.lastReset = todayDate;
 
 await user.save();
@@ -241,6 +246,20 @@ const userId = req.body.user || "guest";
 console.log("USER ID:", userId);
 
 const user = await checkFalHak(userId);
+
+if(!user.premium){
+
+const now = Date.now();
+
+if(!user.lastAdWatch || now - user.lastAdWatch > 60000){
+
+return res.json({
+error:"REKLAM_GEREKLI"
+});
+
+}
+
+}
 
 if(!image){
 return res.json({fortune:"Resim bulunamadı"});
@@ -509,7 +528,7 @@ const userId = req.body.user;
 let user = await User.findOne({userId:userId});
 
 if(user){
-user.falHak = 10;
+user.falHak = 1;
 await user.save();
 }
 
@@ -523,6 +542,34 @@ return res.json({error:"REKLAM_LIMIT"});
 
 user.falHak++;
 user.adWatchCount++;
+
+await user.save();
+
+res.json({success:true});
+
+});
+
+/* ---------------- INTERSTITIAL AD WATCH ---------------- */
+
+app.post("/adWatched", async (req,res)=>{
+
+const userId = req.body.user;
+
+if(!userId){
+return res.json({error:"USER_REQUIRED"});
+}
+
+let user = await User.findOne({userId:userId});
+
+if(!user){
+
+user = new User({
+userId:userId
+});
+
+}
+
+user.lastAdWatch = Date.now();
 
 await user.save();
 
