@@ -218,20 +218,20 @@ app.post("/fal", async(req,res)=>{
 try{
 
 const image=req.body.image;
-const user=req.body.user || "guest";
+const userId = req.body.user || "guest";
 
-if(!image){
-return res.json({fortune:"Resim bulunamadı"});
-}
+const user = await checkFalHak(userId);
 
-const rights = await checkFalRights(user);
-
-if(rights.free + rights.ad <=0){
+if(user.falHak <= 0){
 
 return res.json({
 error:"FAL_HAKKI_BITTI"
 });
 
+}
+
+if(!image){
+return res.json({fortune:"Resim bulunamadı"});
 }
 
 const hash = crypto
@@ -245,6 +245,9 @@ db.get(
 async (err,row)=>{
 
 if(row){
+
+user.falHak--;
+await user.save();
 
 return res.json({
 fortune:row.fortune,
