@@ -131,7 +131,7 @@ return user;
 
 if(user.lastReset !== todayDate){
 
-user.falHak = 1;
+user.falHak = 10;
 user.lastReset = todayDate;
 user.adWatchCount = 0;
 
