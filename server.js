@@ -119,7 +119,7 @@ if(!user){
 
 user = new User({
 userId:userId,
-falHak:1,
+falHak:10,
 lastReset:todayDate
 });
 
