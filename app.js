@@ -202,14 +202,6 @@ async function startFal(){
 
 falRunning=true;
 
-let falHak=parseInt(localStorage.getItem("falHak"))||0;
-
-falHak=Math.max(0,falHak-1);
-
-localStorage.setItem("falHak",falHak);
-
-updateFalHakUI();
-
 const loading=document.getElementById("loading");
 
 if(loading) loading.style.display="flex";
@@ -242,6 +234,14 @@ if(data.error === "FAL_HAKKI_BITTI"){
 }
 
 const fortune = data.fortune || "Fal alınamadı";
+
+let falHak=parseInt(localStorage.getItem("falHak"))||0;
+
+falHak=Math.max(0,falHak-1);
+
+localStorage.setItem("falHak",falHak);
+
+updateFalHakUI();
 
 /* GEÇMİŞ */
 
