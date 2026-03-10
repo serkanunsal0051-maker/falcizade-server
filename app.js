@@ -4,6 +4,16 @@
 
 const today = new Date().toDateString();
 
+let userId = localStorage.getItem("userId");
+
+if(!userId){
+
+userId = "user_" + Math.random().toString(36).substring(2);
+
+localStorage.setItem("userId", userId);
+
+}
+
 function checkDailyFal(){
 
 let lastDate = localStorage.getItem("falDate");
@@ -217,7 +227,7 @@ headers:{"Content-Type":"application/json"},
 body:JSON.stringify({
 
 image:base64Image,
-user:"mobile_user"
+user:userId
 
 })
 
