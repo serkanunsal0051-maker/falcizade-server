@@ -228,14 +228,6 @@ const userId = req.body.user || "guest";
 
 const user = await checkFalHak(userId);
 
-if(!user.premium && user.falHak <= 0){
-
-return res.json({
-error:"FAL_HAKKI_BITTI"
-});
-
-}
-
 if(!image){
 return res.json({fortune:"Resim bulunamadı"});
 }
@@ -252,16 +244,15 @@ async (err,row)=>{
 
 if(row){
 
-if(!user.premium){
-user.falHak--;
-await user.save();
-}
-
 return res.json({
 fortune:row.fortune,
 cached:true
 });
 
+}
+
+if(!user.premium && user.falHak <= 0){
+return res.json({error:"FAL_HAKKI_BITTI"});
 }
 
 try{
