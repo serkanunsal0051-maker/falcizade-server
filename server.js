@@ -213,6 +213,23 @@ app.get("/health",(req,res)=>{
 res.json({status:"ok"});
 });
 
+app.get("/hak", async (req,res)=>{
+
+const userId = req.query.user;
+
+let user = await User.findOne({userId:userId});
+
+if(!user){
+return res.json({error:"USER_YOK"});
+}
+
+res.json({
+user:userId,
+falHak:user.falHak
+});
+
+});
+
 /* ---------------- FAL ANALİZ ---------------- */
 
 app.post("/fal", async(req,res)=>{
