@@ -292,17 +292,17 @@ fortune=ai.output[0].content[0].text;
 
 db.run(
 "INSERT INTO fortunes(user,fortune,image_hash,date) VALUES(?,?,?,?)",
-[user,fortune,hash,new Date().toISOString()]
+[userId,fortune,hash,new Date().toISOString()]
 );
 
 // MongoDB'ye fal kaydet
 
-let userDoc = await User.findOne({userId:user});
+let userDoc = await User.findOne({userId:userId});
 
 if(!userDoc){
 
 userDoc = new User({
-userId:user,
+userId:userId,
 falGecmisi:[]
 });
 
@@ -314,8 +314,6 @@ date: new Date().toISOString()
 });
 
 await userDoc.save();
-
-useFalRight(user);
 
 user.falHak--;
 await user.save();
