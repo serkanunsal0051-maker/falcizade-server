@@ -177,7 +177,15 @@ return;
 
 }
 
-showFullscreenAd();
+if(typeof Android !== "undefined"){
+
+Android.showAd();
+
+}else{
+
+startFal();
+
+}
 
 };
 
@@ -185,53 +193,6 @@ showFullscreenAd();
 /* REKLAM */
 /* ----------------------- */
 
-function showFullscreenAd(){
-
-const ad=document.createElement("div");
-
-ad.style.position="fixed";
-ad.style.inset="0";
-ad.style.background="black";
-ad.style.display="flex";
-ad.style.alignItems="center";
-ad.style.justifyContent="center";
-ad.style.flexDirection="column";
-ad.style.color="white";
-ad.style.zIndex="9999";
-
-ad.innerHTML=`
-
-<h2>🎬 Reklam</h2>
-
-<div style="width:200px;height:10px;background:#333;border-radius:10px;overflow:hidden">
-<div id="adBar" style="width:0;height:100%;background:#ff6b00"></div>
-</div>
-
-`;
-
-document.body.appendChild(ad);
-
-let progress=0;
-
-const timer=setInterval(()=>{
-
-progress+=5;
-
-document.getElementById("adBar").style.width=progress+"%";
-
-if(progress>=100){
-
-clearInterval(timer);
-
-document.body.removeChild(ad);
-
-startFal();
-
-}
-
-},200);
-
-}
 
 /* ----------------------- */
 /* FAL API */
