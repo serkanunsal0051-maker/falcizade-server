@@ -238,6 +238,7 @@ try{
 
 const image=req.body.image;
 const userId = req.body.user || "guest";
+console.log("USER ID:", userId);
 
 const user = await checkFalHak(userId);
 
