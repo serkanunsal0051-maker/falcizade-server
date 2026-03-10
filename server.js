@@ -129,15 +129,11 @@ return user;
 
 }
 
-if(user.lastReset !== todayDate){
-
+// TEST İÇİN FAL HAKKINI ZORLA 10 YAP
 user.falHak = 10;
 user.lastReset = todayDate;
-user.adWatchCount = 0;
 
 await user.save();
-
-}
 
 return user;
 
