@@ -1,3 +1,40 @@
+const mongoose = require("mongoose");
+
+mongoose.connect(process.env.MONGO_URL);
+
+mongoose.connection.on("connected", () => {
+  console.log("MongoDB bağlandı");
+});
+
+const User = mongoose.model("User", {
+
+  userId: String,
+
+  falHak: {
+    type: Number,
+    default: 1
+  },
+
+  lastReset: String,
+
+  premium: {
+    type: Boolean,
+    default: false
+  },
+
+  falGecmisi: [
+    {
+      tarih: String,
+      yorum: String
+    }
+  ]
+
+});
+
+mongoose.connection.on("error", (err) => {
+  console.log("MongoDB hata:", err);
+});
+
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
