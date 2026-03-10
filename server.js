@@ -265,6 +265,10 @@ const ai = await openai.responses.create({
 
 model:"gpt-4o-mini",
 
+max_output_tokens:200,
+
+temperature:0.9,
+
 input:[{
 role:"user",
 content:[
@@ -273,13 +277,34 @@ type:"input_text",
 text:`
 Bu kahve fincanındaki telve şekillerini incele.
 
-Gerçek bir Türk kahvesi falcısı gibi yorum yap.
+Kullanıcıya özel bir Türk kahvesi falı yaz.
+
+Gerçek bir falcı gibi konuş.
+
+Fal yorumunu gizemli ve merak uyandırıcı yap.
+
+Kullanıcıya doğrudan hitap et.
+
+Falcı dili kullan.
+
+Yorumları aşağıdaki başlıklarla yaz:
 
 ### Aşk
+Aşk hayatı hakkında yorum yap.
+
 ### Para
+Para ve iş hayatı hakkında yorum yap.
+
 ### Yol
+Yakın zamanda yol veya değişim olup olmadığını anlat.
+
 ### Haber
+Yakında gelecek bir haberden bahset.
+
 ### Genel Yorum
+Genel enerji ve gelecek hakkında yorum yap.
+
+Falın uzun, akıcı ve detaylı olsun.
 `
 },
 {
