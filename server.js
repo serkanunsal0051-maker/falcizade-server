@@ -303,7 +303,7 @@ const ai = await openai.responses.create({
 
 model:"gpt-4o-mini",
 
-max_output_tokens:200,
+max_output_tokens:600,
 
 temperature:0.9,
 
