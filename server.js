@@ -59,8 +59,6 @@ const multer = require("multer");
 const fs = require("fs");
 const cron = require("node-cron");
 
-const app = express();
-
 app.use(cors());
 app.use(express.static(__dirname));
 app.use(express.json({limit:"50mb"}));
