@@ -892,6 +892,12 @@ updateFalHakUI();
 console.log("hak sync error",e);
 }
 
-alert("🎉 Reklam tamamlandı +1 fal kazandın");
+/* REKLAMDAN SONRA FALI BAŞLAT */
+
+setTimeout(()=>{
+
+startFal();
+
+},500);
 
 }
