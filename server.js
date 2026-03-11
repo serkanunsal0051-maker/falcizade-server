@@ -47,8 +47,6 @@ mongoose.connection.on("error", (err) => {
 
 const express = require("express");
 const cors = require("cors");
-
-const express = require("express");
 const app = express();
 
 app.use(express.static("public"));
