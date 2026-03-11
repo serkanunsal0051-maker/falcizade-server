@@ -846,7 +846,7 @@ document.getElementById("profilePopup").style.display="none";
 /* ANDROID REKLAM ÖDÜLÜ */
 /* ----------------------- */
 
-function onAdReward(){
+async function onAdReward(){
 
 let falHak = parseInt(localStorage.getItem("falHak")) || 0
 
@@ -855,6 +855,28 @@ falHak++
 localStorage.setItem("falHak", falHak)
 
 updateFalHakUI()
+
+/* SERVERA BİLDİR */
+
+try{
+
+await fetch("https://falcizade-server-production.up.railway.app/reward-ad",{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+user:userId
+})
+
+})
+
+}catch(e){
+console.log("reward-ad hata",e)
+}
 
 alert("🎉 Reklam tamamlandı +1 fal kazandın")
 
