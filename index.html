@@ -24,6 +24,16 @@ navigator.serviceWorker.register("service-worker.js");
 
 <body>
 
+<div id="splashScreen">
+
+<div class="splashLogo">🔮</div>
+
+<div class="splashTitle">Falcızade</div>
+
+<div class="splashSub">Yapay Zeka Kahve Falı</div>
+
+</div>
+
 <div class="page">
 
 <div class="topBar card">
@@ -122,7 +132,9 @@ Bugün kalan fal hakkın: <span id="falHak">1</span>
 <div class="crystalBall"></div>
 
 <p class="loadingText">
-Falcızade ruhları dinliyor...
+☕ Fincanındaki semboller analiz ediliyor...
+<br>
+🔮 Yapay zeka falını yorumluyor
 </p>
 
 </div>
@@ -302,6 +314,20 @@ Kapat
 </div>
 
 </div>
+
+<script>
+
+window.addEventListener("load",()=>{
+
+setTimeout(()=>{
+
+document.getElementById("splashScreen").style.display="none"
+
+},2000)
+
+})
+
+</script>
 
 </body>
 </html>

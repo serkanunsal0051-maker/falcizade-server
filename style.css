@@ -18,7 +18,11 @@ body {
   margin: 0;
   min-height: 100vh;
   font-family: "Inter", "Segoe UI", Arial, sans-serif;
-  background: radial-gradient(circle at center, #2e1754 0%, #11061f 60%, #07030f 100%);
+  background:
+radial-gradient(circle at 20% 20%, rgba(180,90,255,0.35) 0%, transparent 25%),
+radial-gradient(circle at 80% 10%, rgba(255,77,186,0.30) 0%, transparent 25%),
+radial-gradient(circle at 50% 80%, rgba(120,120,255,0.25) 0%, transparent 30%),
+linear-gradient(180deg,#1a0933,#0b0318);
   color: var(--text);
 
   display: flex;
@@ -106,28 +110,63 @@ body {
   gap: 10px;
 }
 
-button {
-  border: none;
-  border-radius: 14px;
-  padding: 12px;
-  cursor: pointer;
-  font-weight: bold;
+button{
+
+border:none;
+
+border-radius:16px;
+
+padding:14px;
+
+cursor:pointer;
+
+font-weight:bold;
+
+transition:0.25s;
+
+box-shadow:
+0 6px 18px rgba(0,0,0,0.35),
+0 0 12px rgba(255,255,255,0.08) inset;
+
 }
 
-.falButton {
-  background: linear-gradient(135deg,var(--gold),#ffea99);
+.falButton{
+
+background:linear-gradient(135deg,#ffd166,#ffea99);
+
+color:#2b1a00;
+
+box-shadow:
+0 10px 28px rgba(255,209,102,0.35);
+
 }
 
-.premiumButton {
-  background: linear-gradient(135deg,var(--accent),#ff9f43);
-  color:white;
+.premiumButton{
+
+background:linear-gradient(135deg,#ff4dba,#ff9f43);
+
+color:white;
+
+box-shadow:
+0 10px 28px rgba(255,77,186,0.35);
+
 }
 
-.resultBox {
-  margin-top:16px;
-  background: linear-gradient(160deg, rgba(106,61,177,0.65), rgba(51,18,94,0.65));
-  padding:18px;
-  border-radius:16px;
+.resultBox{
+
+margin-top:16px;
+
+background:
+linear-gradient(160deg, rgba(106,61,177,0.75), rgba(51,18,94,0.75));
+
+padding:22px;
+
+border-radius:18px;
+
+box-shadow:
+0 20px 60px rgba(0,0,0,0.4),
+0 0 20px rgba(168,85,247,0.25);
+
 }
 
 .fortuneSlide {
@@ -527,4 +566,165 @@ border-radius:8px;
 
 .userMenu button:hover{
 background:rgba(255,255,255,0.1);
+}
+
+body::before{
+content:"";
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+
+background-image:
+radial-gradient(white 1px, transparent 1px),
+radial-gradient(#ffd166 1px, transparent 1px);
+
+background-size:120px 120px, 200px 200px;
+opacity:0.35;
+
+pointer-events:none;
+}
+
+#splashScreen{
+
+position:fixed;
+top:0;
+left:0;
+
+width:100%;
+height:100%;
+
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+
+background:
+radial-gradient(circle at 30% 30%, #5b2bbf, transparent 40%),
+radial-gradient(circle at 70% 70%, #ff4dba33, transparent 40%),
+linear-gradient(180deg,#14072b,#07030f);
+
+z-index:999999;
+
+color:white;
+}
+
+.splashLogo{
+
+font-size:70px;
+margin-bottom:10px;
+
+animation:splashGlow 2s infinite alternate;
+
+}
+
+.splashTitle{
+
+font-size:38px;
+font-weight:bold;
+
+}
+
+.splashSub{
+
+opacity:0.8;
+margin-top:6px;
+
+}
+
+@keyframes splashGlow{
+
+from{
+transform:scale(1);
+opacity:0.8;
+}
+
+to{
+transform:scale(1.1);
+opacity:1;
+}
+
+}
+
+button:hover{
+
+transform:translateY(-2px) scale(1.03);
+
+box-shadow:
+0 10px 28px rgba(0,0,0,0.45),
+0 0 18px rgba(255,255,255,0.12) inset;
+
+}
+
+.falButton{
+
+background:linear-gradient(135deg,#ffd166,#ffea99);
+
+color:#2b1a00;
+
+font-size:18px;
+
+padding:18px;
+
+box-shadow:
+0 12px 32px rgba(255,209,102,0.45);
+
+}
+
+.falButton::after{
+content:"";
+position:absolute;
+top:-50%;
+left:-50%;
+width:200%;
+height:200%;
+background:radial-gradient(circle,rgba(255,255,255,0.25),transparent 60%);
+opacity:0;
+transition:0.4s;
+}
+
+.falButton:hover::after{
+opacity:1;
+}
+
+.falButton{
+
+position:relative;
+overflow:hidden;
+
+}
+
+.falButton::before{
+
+content:"";
+
+position:absolute;
+
+top:-50%;
+left:-50%;
+
+width:200%;
+height:200%;
+
+background:radial-gradient(circle,rgba(255,255,255,0.35),transparent 60%);
+
+opacity:0;
+
+transition:0.4s;
+
+}
+
+.falButton:hover::before{
+
+opacity:1;
+
+}
+
+.card:hover{
+
+transform:translateY(-2px);
+
+transition:0.2s;
+
 }
