@@ -15,19 +15,21 @@
 }
 
 body {
-  margin: 0;
-  min-height: 100vh;
-  font-family: "Inter", "Segoe UI", Arial, sans-serif;
-  background:
-radial-gradient(circle at 20% 20%, rgba(180,90,255,0.35) 0%, transparent 25%),
-radial-gradient(circle at 80% 10%, rgba(255,77,186,0.30) 0%, transparent 25%),
-radial-gradient(circle at 50% 80%, rgba(120,120,255,0.25) 0%, transparent 30%),
-linear-gradient(180deg,#1a0933,#0b0318);
-  color: var(--text);
+  margin:0;
+  min-height:100vh;
+  font-family:"Inter","Segoe UI",Arial,sans-serif;
 
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  background-image:url("img/magic-background.png");
+  background-size:100% auto;
+  background-position:center top;
+  background-repeat:no-repeat;
+  background-attachment:fixed;
+
+  color:var(--text);
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
 }
 
 .page {
@@ -94,14 +96,16 @@ linear-gradient(180deg,#1a0933,#0b0318);
   display: grid;
   justify-items: center;
   margin: 10px 0;
+
+  position: relative;
 }
 
 #preview {
-  width: 220px;
-  height: 220px;
-  object-fit: cover;
-  border-radius: 50%;
-  border: 3px solid rgba(255,255,255,0.2);
+width:220px;
+height:220px;
+object-fit:cover;
+border-radius:50%;
+border:3px solid rgba(255,255,255,0.2);
 }
 
 .buttonRow {
@@ -568,7 +572,9 @@ border-radius:8px;
 background:rgba(255,255,255,0.1);
 }
 
-body::before{
+/* body::before{
+...
+} */
 content:"";
 position:fixed;
 top:0;
@@ -726,5 +732,93 @@ opacity:1;
 transform:translateY(-2px);
 
 transition:0.2s;
+
+}
+
+.smoke{
+position:absolute;
+top:-40px;
+left:50%;
+transform:translateX(-50%);
+display:flex;
+gap:8px;
+pointer-events:none;
+}
+
+.smoke span{
+width:8px;
+height:40px;
+background:white;
+border-radius:50%;
+opacity:0;
+filter:blur(8px);
+animation:smokeMove 4s linear infinite;
+}
+
+@keyframes smokeMove{
+
+0%{
+transform:translateY(0) scaleX(1);
+opacity:0;
+}
+
+40%{
+opacity:0.8;
+}
+
+100%{
+transform:translateY(-90px) scaleX(1.5);
+opacity:0;
+}
+
+}
+
+.smoke span:nth-child(1){
+animation-delay:0s;
+}
+
+.smoke span:nth-child(2){
+animation-delay:0.6s;
+}
+
+.smoke span:nth-child(3){
+animation-delay:1.2s;
+}
+
+.smoke span:nth-child(4){
+animation-delay:1.8s;
+}
+
+.smoke span:nth-child(5){
+animation-delay:2.4s;
+}
+
+.magicSymbols{
+
+position:absolute;
+
+top:50%;
+left:50%;
+
+transform:translate(-50%,-50%);
+
+width:240px;
+height:240px;
+
+animation:symbolRotate 20s linear infinite;
+
+}
+
+.magicSymbols span{
+
+position:absolute;
+
+font-size:26px;
+
+color:#ffd166;
+
+text-shadow:
+0 0 12px #ffd166,
+0 0 25px #ffae00;
 
 }
