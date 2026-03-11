@@ -4,11 +4,15 @@
 
 const today = new Date().toDateString();
 
-let userId = localStorage.getItem("userId");
+let userId = window.USER_ID || localStorage.getItem("userId");
 
 if(!userId){
 
 userId = "user_" + Math.random().toString(36).substring(2);
+
+localStorage.setItem("userId", userId);
+
+}else{
 
 localStorage.setItem("userId", userId);
 
