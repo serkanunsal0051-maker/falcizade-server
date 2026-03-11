@@ -94,7 +94,7 @@ stdTTL:3600
 });
 
 const aiQueue = new PQueue({
-concurrency:1
+concurrency:2
 });
 
 /* ---------------- DATABASE ---------------- */
@@ -304,6 +304,15 @@ const hash = crypto
 .update(image)
 .digest("hex");
 
+const cachedFortune = cache.get(hash);
+
+if(cachedFortune){
+return res.json({
+fortune: cachedFortune,
+cached:true
+});
+}
+
 db.get(
 "SELECT fortune FROM fortunes WHERE image_hash=?",
 [hash],
@@ -389,6 +398,7 @@ let fortune="Fal oluşturulamadı";
 
 if(ai.output && ai.output[0].content){
 fortune=ai.output[0].content[0].text;
+cache.set(hash, fortune);
 }
 
 db.run(
