@@ -136,11 +136,14 @@ return user;
 
 }
 
-// TEST İÇİN FAL HAKKINI ZORLA 10 YAP
+if(user.lastReset !== todayDate){
+
 user.falHak = 1;
 user.lastReset = todayDate;
 
 await user.save();
+
+}
 
 return user;
 
@@ -532,11 +535,6 @@ app.post("/reward-ad",async(req,res)=>{
 const userId = req.body.user;
 
 let user = await User.findOne({userId:userId});
-
-if(user){
-user.falHak =;
-await user.save();
-}
 
 if(!user){
 return res.json({error:"USER_NOT_FOUND"});
