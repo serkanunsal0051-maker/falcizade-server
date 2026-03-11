@@ -56,7 +56,7 @@ const app = express();
 
 const rateLimit = require("express-rate-limit");
 const NodeCache = require("node-cache");
-const PQueue = require("p-queue");
+const PQueue = require("p-queue").default;
 
 app.use(express.static("public"));
 
