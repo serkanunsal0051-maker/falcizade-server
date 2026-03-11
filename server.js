@@ -307,6 +307,12 @@ const hash = crypto
 const cachedFortune = cache.get(hash);
 
 if(cachedFortune){
+
+if(!user.premium){
+user.falHak--;
+await user.save();
+}
+
 return res.json({
 fortune: cachedFortune,
 cached:true
