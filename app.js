@@ -919,10 +919,4 @@ console.log("hak sync error",e);
 
 /* REKLAMDAN SONRA FALI BAŞLAT */
 
-setTimeout(()=>{
-
-startFal();
-
-},500);
-
 }
