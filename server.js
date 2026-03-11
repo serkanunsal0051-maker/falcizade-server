@@ -54,6 +54,10 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 
+const rateLimit = require("express-rate-limit");
+const NodeCache = require("node-cache");
+const PQueue = require("p-queue");
+
 app.use(express.static("public"));
 
 require("dotenv").config();
@@ -69,6 +73,14 @@ app.use(express.static(__dirname));
 app.use(express.json({limit:"50mb"}));
 app.use(express.urlencoded({limit:"50mb",extended:true}));
 
+const falLimiter = rateLimit({
+windowMs: 60 * 1000,
+max: 10,
+message:{error:"Çok fazla fal isteği gönderdiniz"}
+});
+
+app.use("/fal", falLimiter);
+
 const openai = new OpenAI({
 apiKey: process.env.OPENAI_API_KEY
 });
@@ -76,6 +88,14 @@ apiKey: process.env.OPENAI_API_KEY
 const db = new sqlite3.Database("./falcizade.db");
 
 const upload = multer({dest:"uploads/"});
+
+const cache = new NodeCache({
+stdTTL:3600
+});
+
+const aiQueue = new PQueue({
+concurrency:1
+});
 
 /* ---------------- DATABASE ---------------- */
 
@@ -309,7 +329,8 @@ return res.json({error:"FAL_HAKKI_BITTI"});
 
 try{
 
-const ai = await openai.responses.create({
+const ai = await aiQueue.add(() =>
+openai.responses.create({
 
 model:"gpt-4o-mini",
 
@@ -361,7 +382,8 @@ image_url:image
 }
 ]
 }]
-});
+})
+);
 
 let fortune="Fal oluşturulamadı";
 
