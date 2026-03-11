@@ -4,20 +4,29 @@
 
 const today = new Date().toDateString();
 
-let userId = window.USER_ID || localStorage.getItem("userId");
+let userId = localStorage.getItem("userId") || null;
 
-if(!userId){
+/* ANDROID USER_ID GELENE KADAR BEKLE */
 
-userId = "user_" + Math.random().toString(36).substring(2);
+function syncAndroidUser(){
 
-localStorage.setItem("userId", userId);
+if(window.USER_ID){
+
+userId = window.USER_ID;
+
+localStorage.setItem("userId",userId);
+
+console.log("Android USER_ID synced:",userId);
 
 }else{
 
-localStorage.setItem("userId", userId);
+setTimeout(syncAndroidUser,200);
 
 }
 
+}
+
+syncAndroidUser();
 function checkDailyFal(){
 
 let lastDate = localStorage.getItem("falDate");
@@ -108,6 +117,18 @@ let currentSlide=0;
 /* ----------------------- */
 
 document.addEventListener("DOMContentLoaded",function(){
+
+/* ANDROID USER_ID SENKRON */
+
+if(window.USER_ID){
+
+userId = window.USER_ID;
+
+localStorage.setItem("userId",userId);
+
+console.log("Android USER_ID synced:",userId);
+
+}
 
 checkDailyFal();
 updateFalHakUI();
