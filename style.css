@@ -23,7 +23,7 @@ font-family:"Inter","Segoe UI",Arial,sans-serif;
 
 background-image:url("img/magic-background-mobile.png");
 background-size:cover;
-background-position:center top;
+background-position:center 20%;
 background-repeat:no-repeat;
 
 color:var(--text);
@@ -32,14 +32,14 @@ display:flex;
 justify-content:center;
 align-items:flex-start;
 
-padding-top:120px;
+padding-top:80px;
 
 }
 
 .page{
 
 width:92%;
-max-width:420px;
+max-width:400px;
 
 margin:auto;
 
