@@ -32,6 +32,11 @@ adWatchCount:{
   default:0
 },
 
+lastAdReset:{
+  type:String,
+  default:""
+},
+
   falGecmisi: [
     {
       fortune: String,
@@ -285,6 +290,11 @@ db.get(
 async (err,row)=>{
 
 if(row){
+
+if(!user.premium){
+user.falHak--;
+await user.save();
+}
 
 return res.json({
 fortune:row.fortune,
@@ -540,6 +550,17 @@ if(!user){
 return res.json({error:"USER_NOT_FOUND"});
 }
 
+const todayDate = today();
+
+/* günlük reklam reset */
+
+if(user.lastAdReset !== todayDate){
+
+user.adWatchCount = 0;
+user.lastAdReset = todayDate;
+
+}
+
 if(user.adWatchCount >= 6){
 return res.json({error:"REKLAM_LIMIT"});
 }
@@ -549,7 +570,10 @@ user.adWatchCount++;
 
 await user.save();
 
-res.json({success:true});
+res.json({
+success:true,
+falHak:user.falHak
+});
 
 });
 
