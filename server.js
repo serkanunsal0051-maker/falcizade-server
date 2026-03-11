@@ -249,6 +249,9 @@ console.log("USER ID:", userId);
 
 const user = await checkFalHak(userId);
 
+// REKLAM KONTROLÜ GEÇİCİ OLARAK KAPATILDI
+
+/*
 if(!user.premium){
 
 const now = Date.now();
@@ -262,6 +265,7 @@ error:"REKLAM_GEREKLI"
 }
 
 }
+*/
 
 if(!image){
 return res.json({fortune:"Resim bulunamadı"});
@@ -530,7 +534,7 @@ const userId = req.body.user;
 let user = await User.findOne({userId:userId});
 
 if(user){
-user.falHak = 1;
+user.falHak =;
 await user.save();
 }
 
