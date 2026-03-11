@@ -848,36 +848,50 @@ document.getElementById("profilePopup").style.display="none";
 
 async function onAdReward(){
 
-let falHak = parseInt(localStorage.getItem("falHak")) || 0
+let falHak = parseInt(localStorage.getItem("falHak")) || 0;
 
-falHak++
+falHak++;
 
-localStorage.setItem("falHak", falHak)
+localStorage.setItem("falHak", falHak);
 
-updateFalHakUI()
+updateFalHakUI();
 
 /* SERVERA BİLDİR */
 
-try{
-
-await fetch("https://falcizade-server-production.up.railway.app/reward-ad",{
-
+await fetch(
+"https://falcizade-server-production.up.railway.app/reward-ad",
+{
 method:"POST",
-
 headers:{
 "Content-Type":"application/json"
 },
-
 body:JSON.stringify({
 user:userId
 })
+});
 
-})
+/* SERVER HAK SENKRON */
 
-}catch(e){
-console.log("reward-ad hata",e)
+try{
+
+const res = await fetch(
+"https://falcizade-server-production.up.railway.app/hak?user="+userId
+);
+
+const data = await res.json();
+
+if(data.falHak !== undefined){
+
+localStorage.setItem("falHak", data.falHak);
+
+updateFalHakUI();
+
 }
 
-alert("🎉 Reklam tamamlandı +1 fal kazandın")
+}catch(e){
+console.log("hak sync error",e);
+}
+
+alert("🎉 Reklam tamamlandı +1 fal kazandın");
 
 }
