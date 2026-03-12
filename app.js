@@ -235,6 +235,16 @@ startFal();
 
 async function startFal(){
 
+const burst=document.querySelector(".energyBurst");
+
+if(burst){
+burst.classList.add("active");
+
+setTimeout(()=>{
+burst.classList.remove("active");
+},800);
+}
+
 falRunning=true;
 
 const loading=document.getElementById("loading");
