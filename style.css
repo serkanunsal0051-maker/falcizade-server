@@ -278,12 +278,25 @@ line-height:1.6;
 /* POPUP */
 
 .popup{
+
 display:none;
+
 position:fixed;
-inset:0;
-background:rgba(0,0,0,0.8);
+top:0;
+left:0;
+
+width:100vw;
+height:100vh;
+
+background:rgba(0,0,0,0.85);
+
 align-items:center;
 justify-content:center;
+
+z-index:2147483647;
+
+transform:translateZ(0);
+
 }
 
 .popupContent{
@@ -293,6 +306,10 @@ border-radius:16px;
 width:320px;
 display:grid;
 gap:10px;
+
+position:relative;
+z-index:2147483647;
+
 }
 
 .popupContent input,
@@ -1024,4 +1041,9 @@ to{
 transform:rotate(360deg);
 }
 
+}
+
+body{
+position:relative;
+z-index:1;
 }
