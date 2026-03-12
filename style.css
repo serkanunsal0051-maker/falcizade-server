@@ -18,11 +18,10 @@ body {
   margin: 0;
   min-height: 100vh;
   font-family: "Inter", "Segoe UI", Arial, sans-serif;
-  background:
-radial-gradient(circle at 20% 20%, rgba(180,90,255,0.35) 0%, transparent 25%),
-radial-gradient(circle at 80% 10%, rgba(255,77,186,0.30) 0%, transparent 25%),
-radial-gradient(circle at 50% 80%, rgba(120,120,255,0.25) 0%, transparent 30%),
-linear-gradient(180deg,#1a0933,#0b0318);
+background:url("img/magic-background.png");
+background-size:cover;
+background-position:center top;
+background-repeat:no-repeat;
   color: var(--text);
 
   display: flex;
@@ -31,6 +30,9 @@ linear-gradient(180deg,#1a0933,#0b0318);
 }
 
 .page {
+  position:relative;
+  z-index:1;
+
   width: 100%;
   max-width: 460px;
   display: grid;
@@ -90,18 +92,32 @@ linear-gradient(180deg,#1a0933,#0b0318);
   width: 100%;
 }
 
-.cup {
-  display: grid;
-  justify-items: center;
-  margin: 10px 0;
+.cup{
+
+position:relative;
+
+display:flex;
+justify-content:center;
+align-items:center;
+
+margin:20px 0;
+
 }
 
 #preview {
-  width: 220px;
-  height: 220px;
-  object-fit: cover;
-  border-radius: 50%;
-  border: 3px solid rgba(255,255,255,0.2);
+
+width:220px;
+height:220px;
+
+object-fit:cover;
+
+border-radius:50%;
+
+border:3px solid rgba(255,255,255,0.25);
+
+display:block;
+margin:auto;
+
 }
 
 .buttonRow {
@@ -262,12 +278,25 @@ line-height:1.6;
 /* POPUP */
 
 .popup{
+
 display:none;
+
 position:fixed;
-inset:0;
-background:rgba(0,0,0,0.8);
+top:0;
+left:0;
+
+width:100vw;
+height:100vh;
+
+background:rgba(0,0,0,0.85);
+
 align-items:center;
 justify-content:center;
+
+z-index:2147483647;
+
+transform:translateZ(0);
+
 }
 
 .popupContent{
@@ -277,6 +306,10 @@ border-radius:16px;
 width:320px;
 display:grid;
 gap:10px;
+
+position:relative;
+z-index:2147483647;
+
 }
 
 .popupContent input,
@@ -325,11 +358,18 @@ background:linear-gradient(135deg,#ff4da6,#ff8a5b);
 /* LOADING EKRANI */
 
 .loadingScreen{
+
 display:none;
+
 justify-content:center;
 align-items:center;
+
 flex-direction:column;
+
 margin-top:15px;
+
+position:relative;
+
 }
 
 .loadingText{
@@ -568,24 +608,6 @@ border-radius:8px;
 background:rgba(255,255,255,0.1);
 }
 
-body::before{
-content:"";
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-
-background-image:
-radial-gradient(white 1px, transparent 1px),
-radial-gradient(#ffd166 1px, transparent 1px);
-
-background-size:120px 120px, 200px 200px;
-opacity:0.35;
-
-pointer-events:none;
-}
-
 #splashScreen{
 
 position:fixed;
@@ -727,4 +749,301 @@ transform:translateY(-2px);
 
 transition:0.2s;
 
+}
+
+.steam{
+
+position:absolute;
+
+width:8px;
+height:80px;
+
+background:rgba(255,255,255,0.4);
+
+border-radius:50%;
+
+top:40px;
+
+filter:blur(8px);
+
+animation:steam 4s infinite;
+
+}
+
+.steam:nth-child(2){
+left:48%;
+animation-delay:1s;
+}
+
+.steam:nth-child(3){
+left:55%;
+animation-delay:2s;
+}
+
+@keyframes steam{
+
+0%{
+transform:translateY(0) scaleX(1);
+opacity:0;
+}
+
+40%{
+opacity:1;
+}
+
+100%{
+transform:translateY(-120px) scaleX(2);
+opacity:0;
+}
+
+}
+
+.stars{
+
+position:fixed;
+
+top:0;
+left:0;
+
+width:100%;
+height:100%;
+
+z-index:0;
+
+pointer-events:none;
+
+background:
+radial-gradient(2px 2px at 20% 30%, white, transparent),
+radial-gradient(2px 2px at 70% 80%, white, transparent),
+radial-gradient(2px 2px at 50% 60%, white, transparent),
+radial-gradient(2px 2px at 80% 20%, white, transparent),
+radial-gradient(2px 2px at 10% 70%, white, transparent);
+
+animation:starsMove 6s linear infinite;
+
+opacity:0.6;
+
+}
+
+@keyframes starsMove{
+
+0%{
+transform:translateY(0);
+}
+
+100%{
+transform:translateY(-80px);
+}
+
+}
+
+.energyCircle{
+
+position:absolute;
+
+width:260px;
+height:260px;
+
+border-radius:50%;
+
+border:2px solid rgba(255,209,102,0.6);
+
+box-shadow:
+0 0 25px rgba(255,209,102,0.6),
+inset 0 0 20px rgba(255,209,102,0.4);
+
+animation:rotateEnergy 12s linear infinite;
+
+}
+
+@keyframes rotateEnergy{
+
+0%{
+transform:rotate(0deg);
+}
+
+100%{
+transform:rotate(360deg);
+}
+
+}
+
+.energyCircle::after{
+
+content:"";
+
+position:absolute;
+
+top:-5px;
+left:-5px;
+
+width:100%;
+height:100%;
+
+border-radius:50%;
+
+border:2px solid rgba(255,255,255,0.3);
+
+filter:blur(6px);
+
+}
+
+.crystalBall{
+
+width:90px;
+height:90px;
+
+border-radius:50%;
+
+background:
+radial-gradient(circle at 30% 30%, #ffffffaa, transparent 60%),
+radial-gradient(circle at 70% 70%, #7d7dff55, transparent 60%),
+linear-gradient(145deg,#5b2bbf,#1a0835);
+
+box-shadow:
+0 0 25px rgba(168,85,247,0.6),
+inset 0 0 30px rgba(255,255,255,0.3);
+
+animation:ballPulse 2s infinite ease-in-out;
+
+}
+
+@keyframes ballPulse{
+
+0%{
+transform:scale(1);
+box-shadow:0 0 20px rgba(168,85,247,0.5);
+}
+
+50%{
+transform:scale(1.1);
+box-shadow:0 0 40px rgba(168,85,247,1);
+}
+
+100%{
+transform:scale(1);
+box-shadow:0 0 20px rgba(168,85,247,0.5);
+}
+
+}
+
+.magicSymbols{
+
+position:absolute;
+
+width:280px;
+height:280px;
+
+display:flex;
+justify-content:center;
+align-items:center;
+
+animation:symbolRotate 18s linear infinite;
+
+color:#ffd166;
+
+font-size:22px;
+
+}
+
+.magicSymbols span{
+position:absolute;
+}
+
+.magicSymbols span:nth-child(1){top:0;}
+.magicSymbols span:nth-child(2){right:0;}
+.magicSymbols span:nth-child(3){bottom:0;}
+.magicSymbols span:nth-child(4){left:0;}
+
+@keyframes symbolRotate{
+
+from{transform:rotate(0deg);}
+to{transform:rotate(360deg);}
+
+}
+
+.energyBurst{
+
+position:absolute;
+
+width:260px;
+height:260px;
+
+border-radius:50%;
+
+background:radial-gradient(circle,#ffd16655,transparent 70%);
+
+opacity:0;
+
+pointer-events:none;
+
+}
+
+.energyBurst.active{
+animation:burst 0.8s ease-out;
+}
+
+@keyframes burst{
+
+0%{
+transform:scale(0.5);
+opacity:1;
+}
+
+100%{
+transform:scale(1.8);
+opacity:0;
+}
+
+}
+
+.runeCircle{
+
+position:absolute;
+
+width:160px;
+height:160px;
+
+display:flex;
+justify-content:center;
+align-items:center;
+
+animation:runeRotate 12s linear infinite;
+
+color:#ffd166;
+
+font-size:22px;
+
+}
+
+.runeCircle span{
+
+position:absolute;
+
+}
+
+.runeCircle span:nth-child(1){top:0;}
+.runeCircle span:nth-child(2){top:20%; right:0;}
+.runeCircle span:nth-child(3){right:0; bottom:20%;}
+.runeCircle span:nth-child(4){bottom:0;}
+.runeCircle span:nth-child(5){bottom:20%; left:0;}
+.runeCircle span:nth-child(6){top:20%; left:0;}
+.runeCircle span:nth-child(7){top:50%; left:-10px;}
+.runeCircle span:nth-child(8){top:50%; right:-10px;}
+
+@keyframes runeRotate{
+
+from{
+transform:rotate(0deg);
+}
+
+to{
+transform:rotate(360deg);
+}
+
+}
+
+body{
+position:relative;
+z-index:1;
 }
