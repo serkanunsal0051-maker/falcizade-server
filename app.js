@@ -276,6 +276,7 @@ if(loading) loading.style.display="none";
 
 // fal hakkı bittiyse
 if(data.error === "FAL_HAKKI_BITTI" && !data.fortune){
+    falRunning = false;
     alert("Fal hakkın bitti. Reklam izle 🎬");
     return;
 }
@@ -315,6 +316,7 @@ localStorage.setItem("totalFal", totalFal);
 
 }catch(err){
 
+falRunning=false;
 alert("Fal hatası");
 
 }
