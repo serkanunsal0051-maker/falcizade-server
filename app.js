@@ -27,6 +27,28 @@ setTimeout(syncAndroidUser,200);
 }
 
 syncAndroidUser();
+function checkDailyFal(){
+
+let lastDate = localStorage.getItem("falDate");
+
+if(lastDate !== today){
+
+localStorage.setItem("falDate",today);
+localStorage.setItem("falHak",1);
+
+}
+
+}
+
+function updateFalHakUI(){
+
+let falHak = parseInt(localStorage.getItem("falHak")) || 0;
+
+const el = document.getElementById("falHak");
+
+if(el) el.innerText = falHak;
+
+}
 
 /* ----------------------- */
 /* REKLAM SAYACI */
@@ -108,6 +130,9 @@ console.log("Android USER_ID synced:",userId);
 
 }
 
+checkDailyFal();
+updateFalHakUI();
+
 /* OTOMATİK GİRİŞ */
 
 const user = JSON.parse(localStorage.getItem("user"));
@@ -169,9 +194,20 @@ window.falBak=function(){
 
 if(falRunning) return;
 
+let falHak=parseInt(localStorage.getItem("falHak"))||0;
+
+if(falHak<=0){
+
+alert("Fal hakkın bitti. Reklam izle 🎬");
+
+return;
+
+}
+
 if(!base64Image){
 
 alert("Önce fincan fotoğrafı yükle");
+
 return;
 
 }
@@ -198,23 +234,6 @@ startFal();
 /* ----------------------- */
 
 async function startFal(){
-
-/* SERVER HAK SENKRON */
-
-const burst=document.querySelector(".energyBurst");
-
-if(burst){
-burst.classList.add("active");
-
-setTimeout(()=>{
-burst.classList.remove("active");
-},800);
-}
-
-if(falRunning){
-console.log("Fal zaten çalışıyor");
-return;
-}
 
 falRunning=true;
 
@@ -244,26 +263,20 @@ const data = await res.json();
 if(loading) loading.style.display="none";
 
 // fal hakkı bittiyse
-
-if(data.error === "FAL_HAKKI_BITTI" && !data.fortune){
-
-falRunning=false;
-
-if(typeof Android !== "undefined"){
-
-Android.showAdReward();
-
-}else{
-
-alert("Fal hakkın bitti. Reklam izle 🎬");
-
-}
-
-return;
-
+if(data.error === "FAL_HAKKI_BITTI"){
+    alert("Fal hakkın bitti. Reklam izle 🎬");
+    return;
 }
 
 const fortune = data.fortune || "Fal alınamadı";
+
+let falHak=parseInt(localStorage.getItem("falHak"))||0;
+
+falHak=Math.max(0,falHak-1);
+
+localStorage.setItem("falHak",falHak);
+
+updateFalHakUI();
 
 /* GEÇMİŞ */
 
@@ -290,7 +303,6 @@ localStorage.setItem("totalFal", totalFal);
 
 }catch(err){
 
-falRunning=false;
 alert("Fal hatası");
 
 }
@@ -486,6 +498,12 @@ return;
 share.count++;
 
 localStorage.setItem("shareData",JSON.stringify(share));
+
+let falHak=parseInt(localStorage.getItem("falHak"))||0;
+
+falHak++;
+
+localStorage.setItem("falHak",falHak);
 
 updateFalHakUI();
 
@@ -855,7 +873,15 @@ document.getElementById("profilePopup").style.display="none";
 
 async function onAdReward(){
 
-try{
+let falHak = parseInt(localStorage.getItem("falHak")) || 0;
+
+falHak++;
+
+localStorage.setItem("falHak", falHak);
+
+updateFalHakUI();
+
+/* SERVERA BİLDİR */
 
 await fetch(
 "https://falcizade-server-production.up.railway.app/reward-ad",
@@ -869,12 +895,28 @@ user:userId
 })
 });
 
-startFal();
+/* SERVER HAK SENKRON */
 
-}catch(e){
+try{
 
-alert("Reklam hatası");
+const res = await fetch(
+"https://falcizade-server-production.up.railway.app/hak?user="+userId
+);
+
+const data = await res.json();
+
+if(data.falHak !== undefined){
+
+localStorage.setItem("falHak", data.falHak);
+
+updateFalHakUI();
 
 }
+
+}catch(e){
+console.log("hak sync error",e);
+}
+
+/* REKLAMDAN SONRA FALI BAŞLAT */
 
 }
