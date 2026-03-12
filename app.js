@@ -225,11 +225,6 @@ startFal();
 };
 
 /* ----------------------- */
-/* REKLAM */
-/* ----------------------- */
-
-
-/* ----------------------- */
 /* FAL API */
 /* ----------------------- */
 
@@ -873,6 +868,20 @@ document.getElementById("profilePopup").style.display="none";
 
 async function onAdReward(){
 
+console.log("REKLAM ÖDÜLÜ GELDİ");
+
+/* LOKAL HAK */
+
+let falHak = parseInt(localStorage.getItem("falHak")) || 0;
+
+falHak++;
+
+localStorage.setItem("falHak", falHak);
+
+updateFalHakUI();
+
+alert("+1 Fal Hakkı Kazandın 🎉");
+
 /* SERVERA BİLDİR */
 
 await fetch(
@@ -906,9 +915,9 @@ updateFalHakUI();
 }
 
 }catch(e){
-console.log("hak sync error",e);
-}
 
-/* REKLAMDAN SONRA FALI BAŞLAT */
+console.log("hak sync error",e);
+
+}
 
 }
