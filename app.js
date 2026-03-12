@@ -28,16 +28,6 @@ setTimeout(syncAndroidUser,200);
 
 syncAndroidUser();
 
-function updateFalHakUI(){
-
-let falHak = parseInt(localStorage.getItem("falHak")) || 0;
-
-const el = document.getElementById("falHak");
-
-if(el) el.innerText = falHak;
-
-}
-
 /* ----------------------- */
 /* REKLAM SAYACI */
 /* ----------------------- */
@@ -254,10 +244,23 @@ const data = await res.json();
 if(loading) loading.style.display="none";
 
 // fal hakkı bittiyse
+
 if(data.error === "FAL_HAKKI_BITTI" && !data.fortune){
-    falRunning = false;
-    alert("Fal hakkın bitti. Reklam izle 🎬");
-    return;
+
+falRunning=false;
+
+if(typeof Android !== "undefined"){
+
+Android.showAdReward();
+
+}else{
+
+alert("Fal hakkın bitti. Reklam izle 🎬");
+
+}
+
+return;
+
 }
 
 const fortune = data.fortune || "Fal alınamadı";
@@ -483,12 +486,6 @@ return;
 share.count++;
 
 localStorage.setItem("shareData",JSON.stringify(share));
-
-let falHak=parseInt(localStorage.getItem("falHak"))||0;
-
-falHak++;
-
-localStorage.setItem("falHak",falHak);
 
 updateFalHakUI();
 
