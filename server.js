@@ -277,7 +277,7 @@ console.log("USER ID:", userId);
 
 const user = await checkFalHak(userId);
 
-if(!user.premium && user.falHak <= 0){
+if(!user.premium && user.falHak < 0){
 return res.json({error:"FAL_HAKKI_BITTI"});
 }
 
