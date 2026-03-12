@@ -342,10 +342,6 @@ cached:true
 
 }
 
-if(!user.premium && user.falHak <= 0){
-return res.json({error:"FAL_HAKKI_BITTI"});
-}
-
 try{
 
 const ai = await aiQueue.add(() =>
