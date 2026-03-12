@@ -927,10 +927,4 @@ user:userId
 })
 });
 
-/* SERVER YAZSIN DİYE BEKLE */
-
-setTimeout(()=>{
-startFal();
-},700);
-
 }
