@@ -198,26 +198,6 @@ startFal();
 
 };
 
-if(!base64Image){
-
-alert("Önce fincan fotoğrafı yükle");
-
-return;
-
-}
-
-if(typeof Android !== "undefined"){
-
-Android.showAdFal();
-
-}else{
-
-startFal();
-
-}
-
-};
-
 /* ----------------------- */
 /* REKLAM */
 /* ----------------------- */
