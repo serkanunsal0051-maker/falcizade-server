@@ -905,28 +905,6 @@ user:userId
 })
 });
 
-/* SERVER HAK SENKRON */
-
-try{
-
-const res = await fetch(
-"https://falcizade-server-production.up.railway.app/hak?user="+userId
-);
-
-const data = await res.json();
-
-if(data.falHak !== undefined){
-
-localStorage.setItem("falHak", data.falHak);
-
-updateFalHakUI();
-
-}
-
-}catch(e){
-console.log("hak sync error",e);
-}
-
 /* REKLAMDAN SONRA FALI BAŞLAT */
 
 }
