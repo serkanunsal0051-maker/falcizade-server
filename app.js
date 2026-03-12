@@ -907,4 +907,6 @@ user:userId
 
 /* REKLAMDAN SONRA FALI BAŞLAT */
 
+startFal();
+
 }
