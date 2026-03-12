@@ -873,14 +873,6 @@ document.getElementById("profilePopup").style.display="none";
 
 async function onAdReward(){
 
-let falHak = parseInt(localStorage.getItem("falHak")) || 0;
-
-falHak++;
-
-localStorage.setItem("falHak", falHak);
-
-updateFalHakUI();
-
 /* SERVERA BİLDİR */
 
 await fetch(
