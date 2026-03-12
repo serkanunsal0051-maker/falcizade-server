@@ -905,8 +905,10 @@ user:userId
 })
 });
 
-/* REKLAMDAN SONRA FALI BAŞLAT */
+/* SERVER YAZSIN DİYE BEKLE */
 
+setTimeout(()=>{
 startFal();
+},700);
 
 }
