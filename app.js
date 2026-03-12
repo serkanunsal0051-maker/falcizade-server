@@ -295,7 +295,7 @@ const data = await res.json();
 if(loading) loading.style.display="none";
 
 // fal hakkı bittiyse
-if(data.error === "FAL_HAKKI_BITTI"){
+if(data.error === "FAL_HAKKI_BITTI" && !data.fortune){
     alert("Fal hakkın bitti. Reklam izle 🎬");
     return;
 }
