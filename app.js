@@ -882,7 +882,6 @@ localStorage.setItem("falHak", falHak);
 updateFalHakUI();
 
 falRunning = false;
-startFal();
 
 /* SERVERA BİLDİR */
 
