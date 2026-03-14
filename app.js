@@ -4,29 +4,18 @@
 
 const today = new Date().toDateString();
 
-let userId = localStorage.getItem("userId") || null;
+let userId = localStorage.getItem("userId");
 
-/* ANDROID USER_ID GELENE KADAR BEKLE */
+if(!userId){
 
-function syncAndroidUser(){
-
-if(window.USER_ID){
-
-userId = window.USER_ID;
+userId = "web_" + Math.random().toString(36).substring(2);
 
 localStorage.setItem("userId",userId);
 
-console.log("Android USER_ID synced:",userId);
-
-}else{
-
-setTimeout(syncAndroidUser,200);
-
 }
 
-}
+/* ANDROID USER_ID GELENE KADAR BEKLE */
 
-syncAndroidUser();
 function checkDailyFal(){
 
 let lastDate = localStorage.getItem("falDate");
