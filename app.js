@@ -922,6 +922,18 @@ document.getElementById("profilePopup").style.display="none";
 
 async function onAdReward(){
 
+/* FAL İÇİN REKLAM İZLENDİYSE */
+
+if(falRunning && adMode==="fal"){
+
+startFal();
+adMode=null;
+return;
+
+}
+
+/* NORMAL ÖDÜL REKLAMI */
+
 if(adMode==="reward"){
 
 let falHak = parseInt(localStorage.getItem("falHak")) || 0;
@@ -934,6 +946,8 @@ updateFalHakUI();
 
 }
 
+/* SERVER BİLDİRİMİ */
+
 await fetch(
 "https://falcizade-server-production.up.railway.app/reward-ad",
 {
@@ -945,14 +959,6 @@ body:JSON.stringify({
 user:userId
 })
 });
-
-if(adMode==="fal"){
-
-setTimeout(()=>{
-startFal();
-},300);
-
-}
 
 adMode=null;
 
