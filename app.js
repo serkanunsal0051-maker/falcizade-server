@@ -100,6 +100,7 @@ return share;
 let base64Image="";
 let falRunning=false;
 let currentSlide=0;
+let adForFal=false;
 
 /* ----------------------- */
 /* SAYFA YÜKLENİNCE */
@@ -205,6 +206,7 @@ if(falHak > 0){
 
 if(typeof Android !== "undefined"){
 
+adForFal=true;
 Android.showAd();
 
 }else{
@@ -957,8 +959,14 @@ updateFalHakUI();
 console.log("hak sync error",e);
 }
 
-/* REKLAMDAN SONRA FALI BAŞLAT */
+/* EĞER REKLAM FAL İÇİN AÇILDIYSA FALI BAŞLAT */
+
+if(adForFal){
+
+adForFal=false;
 
 startFal();
+
+}
 
 }
