@@ -203,7 +203,15 @@ return;
 
 if(falHak > 0){
 
+if(typeof Android !== "undefined"){
+
+Android.showAd();
+
+}else{
+
 startFal();
+
+}
 
 }else{
 
@@ -950,5 +958,7 @@ console.log("hak sync error",e);
 }
 
 /* REKLAMDAN SONRA FALI BAŞLAT */
+
+startFal();
 
 }
