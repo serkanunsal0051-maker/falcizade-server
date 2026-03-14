@@ -913,6 +913,10 @@ document.getElementById("profilePopup").style.display="none";
 
 async function onAdReward(){
 
+/* SADECE REKLAM İZLE BUTONU İÇİN HAK VER */
+
+if(!adForFal){
+
 let falHak = parseInt(localStorage.getItem("falHak")) || 0;
 
 falHak++;
@@ -920,6 +924,8 @@ falHak++;
 localStorage.setItem("falHak", falHak);
 
 updateFalHakUI();
+
+}
 
 falRunning = false;
 
