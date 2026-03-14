@@ -881,6 +881,9 @@ localStorage.setItem("falHak", falHak);
 
 updateFalHakUI();
 
+falRunning = false;
+startFal();
+
 /* SERVERA BİLDİR */
 
 await fetch(
