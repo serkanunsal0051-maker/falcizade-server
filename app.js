@@ -189,7 +189,6 @@ let falHak=parseInt(localStorage.getItem("falHak"))||0;
 if(falHak<=0){
 
 alert("Fal hakkın bitti. Reklam izle 🎬");
-
 return;
 
 }
@@ -197,35 +196,19 @@ return;
 if(!base64Image){
 
 alert("Önce fincan fotoğrafı yükle");
-
 return;
 
 }
 
-if(falHak > 0){
-
 if(typeof Android !== "undefined"){
 
+falRunning = true;
 adMode="fal";
 Android.showAd();
 
 }else{
 
 startFal();
-
-}
-
-}else{
-
-if(typeof Android !== "undefined"){
-
-Android.showAd();
-
-}else{
-
-alert("Fal hakkın bitti. Reklam izle 🎬");
-
-}
 
 }
 
@@ -241,8 +224,6 @@ alert("Fal hakkın bitti. Reklam izle 🎬");
 /* ----------------------- */
 
 async function startFal(){
-
-falRunning=true;
 
 const loading=document.getElementById("loading");
 
@@ -950,8 +931,6 @@ localStorage.setItem("falHak", falHak);
 updateFalHakUI();
 
 }
-
-falRunning = false;
 
 await fetch(
 "https://falcizade-server-production.up.railway.app/reward-ad",
