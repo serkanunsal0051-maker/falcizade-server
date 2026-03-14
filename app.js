@@ -268,8 +268,6 @@ user:userId
 
 const data = await res.json();
 
-if(loading) loading.style.display="none";
-
 // fal hakkı bittiyse
 if(data.error === "FAL_HAKKI_BITTI"){
 
@@ -327,6 +325,8 @@ alert("Fal hatası");
 }
 
 falRunning=false;
+
+if(loading) loading.style.display="none";
 
 }
 
