@@ -212,13 +212,21 @@ return;
 
 }
 
+if(falHak > 0){
+
+startFal();
+
+}else{
+
 if(typeof Android !== "undefined"){
 
 Android.showAd();
 
 }else{
 
-startFal();
+alert("Fal hakkın bitti. Reklam izle 🎬");
+
+}
 
 }
 
