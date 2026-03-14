@@ -974,6 +974,8 @@ if(adForFal){
 
 adForFal=false;
 
+falRunning = false;
+
 startFal();
 
 }
