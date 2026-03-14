@@ -287,7 +287,7 @@ return;
 
 }
 
-const fortune = data.fortune || "Fal alınamadı";
+const fortune = data.fortune || data.result || data.text || "Fal alınamadı";
 
 let falHak=parseInt(localStorage.getItem("falHak"))||0;
 
