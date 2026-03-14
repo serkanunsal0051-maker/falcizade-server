@@ -294,6 +294,9 @@ alert("Fal hakkın bitti. Reklam izle 🎬");
 
 falRunning=false;
 
+const loading=document.getElementById("loading");
+if(loading) loading.style.display="none";
+
 return;
 
 }
