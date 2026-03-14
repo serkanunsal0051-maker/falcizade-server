@@ -102,13 +102,15 @@ let falRunning=false;
 let currentSlide=0;
 let adMode=null;
 
+let APP_STATE="IDLE";
+
 let pendingFal=false;
 
 window.addEventListener("adClosed",function(){
 
-if(pendingFal){
+if(APP_STATE==="WAIT_AD"){
 
-pendingFal=false;
+APP_STATE="RUNNING";
 startFal();
 
 }
@@ -195,7 +197,7 @@ reader.readAsDataURL(file);
 
 window.falBak=function(){
 
-if(falRunning) return;
+if(APP_STATE!=="IDLE") return;
 
 let falHak=parseInt(localStorage.getItem("falHak"))||0;
 
@@ -209,9 +211,10 @@ alert("Önce fincan fotoğrafı yükle");
 return;
 }
 
+APP_STATE="WAIT_AD";
+
 if(typeof Android !== "undefined"){
 
-pendingFal=true;
 Android.showAd();
 
 }else{
@@ -363,6 +366,8 @@ if(loading) loading.style.display="none";
 }
 
 falRunning=false;
+
+APP_STATE="IDLE";
 
 if(loading) loading.style.display="none";
 
