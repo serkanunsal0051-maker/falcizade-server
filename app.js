@@ -943,7 +943,9 @@ user:userId
 })
 });
 
-/* SERVER HAK SENKRON */
+/* SERVER HAK SENKRON SADECE FAL İÇİN */
+
+if(adForFal){
 
 try{
 
@@ -963,6 +965,8 @@ updateFalHakUI();
 
 }catch(e){
 console.log("hak sync error",e);
+}
+
 }
 
 /* EĞER REKLAM FAL İÇİN AÇILDIYSA FALI BAŞLAT */
