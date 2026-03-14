@@ -100,7 +100,7 @@ return share;
 let base64Image="";
 let falRunning=false;
 let currentSlide=0;
-let adForFal=false;
+let adMode=null;
 
 /* ----------------------- */
 /* SAYFA YÜKLENİNCE */
@@ -206,7 +206,7 @@ if(falHak > 0){
 
 if(typeof Android !== "undefined"){
 
-adForFal=true;
+adMode="fal";
 Android.showAd();
 
 }else{
@@ -534,6 +534,7 @@ window.watchAd=function(){
 
 if (typeof Android !== "undefined") {
 
+    adMode="reward";
     Android.showAd();
 
 } else {
@@ -938,9 +939,7 @@ document.getElementById("profilePopup").style.display="none";
 
 async function onAdReward(){
 
-/* SADECE REKLAM İZLE BUTONU İÇİN HAK VER */
-
-if(!adForFal){
+if(adMode==="reward"){
 
 let falHak = parseInt(localStorage.getItem("falHak")) || 0;
 
@@ -954,8 +953,6 @@ updateFalHakUI();
 
 falRunning = false;
 
-/* SERVERA BİLDİR */
-
 await fetch(
 "https://falcizade-server-production.up.railway.app/reward-ad",
 {
@@ -968,16 +965,12 @@ user:userId
 })
 });
 
-/* EĞER REKLAM FAL İÇİN AÇILDIYSA FALI BAŞLAT */
-
-if(adForFal){
-
-adForFal=false;
-
-falRunning = false;
+if(adMode==="fal"){
 
 startFal();
 
 }
+
+adMode=null;
 
 }
