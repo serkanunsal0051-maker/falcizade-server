@@ -371,6 +371,8 @@ const genel=fortune.split("### Genel Yorum")[1]||fortune;
 
 const result=document.getElementById("result");
 
+if(!result) return;
+
 result.innerHTML=`
 
 <button onclick="closeFal()">✖</button>
@@ -946,7 +948,9 @@ user:userId
 
 if(adMode==="fal"){
 
+setTimeout(()=>{
 startFal();
+},300);
 
 }
 
