@@ -325,6 +325,28 @@ localStorage.setItem("falHistory",JSON.stringify(history));
 
 renderFortune(fortune);
 
+/* SERVER HAK SENKRON */
+
+try{
+
+const res = await fetch(
+"https://falcizade-server-production.up.railway.app/hak?user="+userId
+);
+
+const data = await res.json();
+
+if(data.falHak !== undefined){
+
+localStorage.setItem("falHak", data.falHak);
+
+updateFalHakUI();
+
+}
+
+}catch(e){
+console.log("hak sync error",e);
+}
+
 let totalFal = parseInt(localStorage.getItem("totalFal")) || 0;
 
 totalFal++;
@@ -942,32 +964,6 @@ body:JSON.stringify({
 user:userId
 })
 });
-
-/* SERVER HAK SENKRON SADECE FAL İÇİN */
-
-if(adForFal){
-
-try{
-
-const res = await fetch(
-"https://falcizade-server-production.up.railway.app/hak?user="+userId
-);
-
-const data = await res.json();
-
-if(data.falHak !== undefined){
-
-localStorage.setItem("falHak", data.falHak);
-
-updateFalHakUI();
-
-}
-
-}catch(e){
-console.log("hak sync error",e);
-}
-
-}
 
 /* EĞER REKLAM FAL İÇİN AÇILDIYSA FALI BAŞLAT */
 
