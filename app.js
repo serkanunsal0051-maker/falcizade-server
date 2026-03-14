@@ -200,17 +200,7 @@ return;
 
 }
 
-if(typeof Android !== "undefined"){
-
-falRunning = true;
-adMode="fal";
-Android.showAd();
-
-}else{
-
 startFal();
-
-}
 
 };
 
