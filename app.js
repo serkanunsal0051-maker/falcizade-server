@@ -214,7 +214,7 @@ return;
 
 if(typeof Android !== "undefined"){
 
-Android.showAdFal();
+Android.showAd();
 
 }else{
 
