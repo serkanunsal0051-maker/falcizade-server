@@ -281,6 +281,8 @@ alert("Fal hakkın bitti. Reklam izle 🎬");
 
 }
 
+falRunning=false;
+
 return;
 
 }
