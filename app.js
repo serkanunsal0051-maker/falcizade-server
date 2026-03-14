@@ -102,6 +102,19 @@ let falRunning=false;
 let currentSlide=0;
 let adMode=null;
 
+let pendingFal=false;
+
+window.addEventListener("adClosed",function(){
+
+if(pendingFal){
+
+pendingFal=false;
+startFal();
+
+}
+
+});
+
 /* ----------------------- */
 /* SAYFA YÜKLENİNCE */
 /* ----------------------- */
@@ -187,20 +200,25 @@ if(falRunning) return;
 let falHak=parseInt(localStorage.getItem("falHak"))||0;
 
 if(falHak<=0){
-
 alert("Fal hakkın bitti. Reklam izle 🎬");
 return;
-
 }
 
 if(!base64Image){
-
 alert("Önce fincan fotoğrafı yükle");
 return;
-
 }
 
+if(typeof Android !== "undefined"){
+
+pendingFal=true;
+Android.showAd();
+
+}else{
+
 startFal();
+
+}
 
 };
 
@@ -214,6 +232,8 @@ startFal();
 /* ----------------------- */
 
 async function startFal(){
+
+falRunning=true;
 
 const loading=document.getElementById("loading");
 
