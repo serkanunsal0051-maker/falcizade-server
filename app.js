@@ -266,6 +266,20 @@ user:userId
 
 });
 
+if(!res.ok){
+
+alert("Sunucu hatası: " + res.status);
+
+falRunning=false;
+
+const loading=document.getElementById("loading");
+
+if(loading) loading.style.display="none";
+
+return;
+
+}
+
 const data = await res.json();
 
 // fal hakkı bittiyse
@@ -320,7 +334,15 @@ localStorage.setItem("totalFal", totalFal);
 
 }catch(err){
 
-alert("Fal hatası");
+console.error("Fal API hatası:",err);
+
+alert("Fal alınamadı. Sunucu hatası.");
+
+falRunning=false;
+
+const loading=document.getElementById("loading");
+
+if(loading) loading.style.display="none";
 
 }
 
