@@ -233,7 +233,8 @@ startFal();
 
 async function startFal(){
 
-falRunning=true;
+if(falRunning) return;
+falRunning = true;
 
 const loading=document.getElementById("loading");
 
