@@ -272,8 +272,17 @@ if(loading) loading.style.display="none";
 
 // fal hakkı bittiyse
 if(data.error === "FAL_HAKKI_BITTI"){
-    alert("Fal hakkın bitti. Reklam izle 🎬");
-    return;
+
+let falHak = parseInt(localStorage.getItem("falHak")) || 0;
+
+if(falHak <= 0){
+
+alert("Fal hakkın bitti. Reklam izle 🎬");
+
+}
+
+return;
+
 }
 
 const fortune = data.fortune || "Fal alınamadı";
