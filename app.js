@@ -40,39 +40,22 @@ if(el) el.innerText = falHak;
 }
 
 /* ----------------------- */
-/* REKLAM SAYACI */
-/* ----------------------- */
-
-function getAdData(){
-
-let adData = JSON.parse(localStorage.getItem("adData"));
-
-if(!adData){
-
-adData = {date:today,count:0};
-
-}
-
-if(adData.date !== today){
-
-adData.date = today;
-adData.count = 0;
-
-}
-
-localStorage.setItem("adData",JSON.stringify(adData));
-
-return adData;
-
-}
-
-/* ----------------------- */
 /* PAYLAŞIM SAYACI */
 /* ----------------------- */
 
+function safeParseJSON(value, fallback){
+if(!value) return fallback;
+
+try{
+return JSON.parse(value);
+}catch(_error){
+return fallback;
+}
+}
+
 function getShareData(){
 
-let share = JSON.parse(localStorage.getItem("shareData"));
+let share = safeParseJSON(localStorage.getItem("shareData"), null);
 
 if(!share){
 
@@ -100,22 +83,47 @@ return share;
 let base64Image="";
 let falRunning=false;
 let currentSlide=0;
-let adMode=null;
 
 let APP_STATE="IDLE";
 
-let pendingFal=false;
+const API_BASE = "https://falcizade-server-production.up.railway.app";
+const FETCH_TIMEOUT_MS = 30000;
 
-window.addEventListener("adClosed",function(){
-
-if(APP_STATE==="WAIT_AD"){
-
-APP_STATE="RUNNING";
-startFal();
-
+function isAndroidBridgeReady(){
+return typeof window.Android !== "undefined";
 }
 
+function showError(message){
+alert(message);
+}
+
+async function fetchJsonWithTimeout(url, options = {}){
+const controller = new AbortController();
+const timeoutId = setTimeout(()=>controller.abort(), FETCH_TIMEOUT_MS);
+
+try{
+const response = await fetch(url, {
+...options,
+signal: controller.signal
 });
+
+let data = null;
+try{
+data = await response.json();
+}catch(_error){
+data = null;
+}
+
+if(!response.ok){
+const serverMessage = data && data.error ? data.error : `HTTP_${response.status}`;
+throw new Error(serverMessage);
+}
+
+return data;
+}finally{
+clearTimeout(timeoutId);
+}
+}
 
 /* ----------------------- */
 /* SAYFA YÜKLENİNCE */
@@ -196,6 +204,10 @@ reader.readAsDataURL(file);
 /* ----------------------- */
 
 window.falBak=function(){
+showAdForFal();
+};
+
+window.showAdForFal = function(){
 
 if(APP_STATE!=="IDLE") return;
 
@@ -211,17 +223,14 @@ alert("Önce fincan fotoğrafı yükle");
 return;
 }
 
-APP_STATE="WAIT_AD";
+APP_STATE = "WAIT_AD";
 
-if(typeof Android !== "undefined"){
-
-Android.showAd();
-
-}else{
-
-startFal();
-
+if(isAndroidBridgeReady() && typeof Android.showAdForFal === "function"){
+Android.showAdForFal();
+return;
 }
+
+window.startFalFromAd();
 
 };
 
@@ -243,38 +252,18 @@ const loading=document.getElementById("loading");
 
 if(loading) loading.style.display="flex";
 
+let fortune = null;
+
 try{
 
-const res = await fetch("https://falcizade-server-production.up.railway.app/fal",{
-
+const data = await fetchJsonWithTimeout(`${API_BASE}/fal`,{
 method:"POST",
-
 headers:{"Content-Type":"application/json"},
-
 body:JSON.stringify({
-
 image:base64Image,
 user:userId
-
 })
-
 });
-
-if(!res.ok){
-
-alert("Sunucu hatası: " + res.status);
-
-falRunning=false;
-
-const loading=document.getElementById("loading");
-
-if(loading) loading.style.display="none";
-
-return;
-
-}
-
-const data = await res.json();
 
 // fal hakkı bittiyse
 if(data.error === "FAL_HAKKI_BITTI"){
@@ -283,7 +272,7 @@ let falHak = parseInt(localStorage.getItem("falHak")) || 0;
 
 if(falHak <= 0){
 
-alert("Fal hakkın bitti. Reklam izle 🎬");
+showError("Fal hakkın bitti. Reklam izle 🎬");
 
 }
 
@@ -292,11 +281,11 @@ falRunning=false;
 const loading=document.getElementById("loading");
 if(loading) loading.style.display="none";
 
-return;
+return null;
 
 }
 
-const fortune = data.fortune || data.result || data.text || "Fal alınamadı";
+fortune = data.fortune || data.result || data.text || "Fal alınamadı";
 
 let falHak=parseInt(localStorage.getItem("falHak"))||0;
 
@@ -327,15 +316,11 @@ renderFortune(fortune);
 
 try{
 
-const res = await fetch(
-"https://falcizade-server-production.up.railway.app/hak?user="+userId
-);
+const hakData = await fetchJsonWithTimeout(`${API_BASE}/hak?user=${encodeURIComponent(userId)}`);
 
-const data = await res.json();
+if(hakData && hakData.falHak !== undefined){
 
-if(data.falHak !== undefined){
-
-localStorage.setItem("falHak", data.falHak);
+localStorage.setItem("falHak", hakData.falHak);
 
 updateFalHakUI();
 
@@ -355,23 +340,35 @@ localStorage.setItem("totalFal", totalFal);
 
 console.error("Fal API hatası:",err);
 
-alert("Fal alınamadı. Sunucu hatası.");
+const message = err && err.name === "AbortError"
+? "İstek zaman aşımına uğradı. Lütfen tekrar deneyin."
+: "Fal alınamadı. Sunucu hatası.";
 
+showError(message);
+}finally{
 falRunning=false;
-
-const loading=document.getElementById("loading");
-
-if(loading) loading.style.display="none";
-
-}
-
-falRunning=false;
-
 APP_STATE="IDLE";
-
 if(loading) loading.style.display="none";
+}
+
+return fortune;
 
 }
+
+window.startFalFromAd = async function(){
+if(APP_STATE !== "WAIT_AD" && APP_STATE !== "RUNNING") return;
+
+APP_STATE = "RUNNING";
+const resultFortune = await startFal();
+
+if(isAndroidBridgeReady() && typeof Android.onFalResult === "function"){
+try{
+Android.onFalResult(resultFortune || "");
+}catch(e){
+console.log("Android.onFalResult error", e);
+}
+}
+};
 
 /* ----------------------- */
 /* FAL GÖSTER */
@@ -531,14 +528,19 @@ document.getElementById("result").innerHTML="";
 
 window.watchAd=function(){
 
-if (typeof Android !== "undefined") {
+if (isAndroidBridgeReady()) {
 
-    adMode="reward";
-    Android.showAd();
+if(typeof Android.showRewardAd === "function"){
+Android.showRewardAd();
+}else if(typeof Android.showAd === "function"){
+Android.showAd();
+}else{
+showError("Reklam özelliği hazır değil.");
+}
 
 } else {
 
-    alert("Bu özellik sadece mobil uygulamada çalışır.");
+showError("Bu özellik sadece mobil uygulamada çalışır.");
 
 }
 
@@ -598,9 +600,7 @@ giveShareReward();
 
 window.shareInstagram=function(){
 
-navigator.clipboard.writeText(window.location.href);
-
-alert("Link kopyalandı");
+copyTextToClipboard(window.location.href, "Link kopyalandı");
 
 giveShareReward();
 
@@ -608,7 +608,7 @@ giveShareReward();
 
 window.shareTikTok=function(){
 
-navigator.clipboard.writeText(window.location.href);
+copyTextToClipboard(window.location.href, "Link kopyalandı");
 
 window.open("https://tiktok.com");
 
@@ -697,9 +697,7 @@ giveShareReward();
 
 window.copyFal=function(){
 
-navigator.clipboard.writeText(window.location.href);
-
-alert("Link kopyalandı 📋");
+copyTextToClipboard(window.location.href, "Link kopyalandı 📋");
 
 giveShareReward();
 
@@ -920,6 +918,8 @@ document.addEventListener("click", function(e){
 const panel = document.getElementById("userPanelTop");
 const menu = document.getElementById("userMenu");
 
+if(!panel || !menu) return;
+
 if(!panel.contains(e.target) && !menu.contains(e.target)){
 menu.style.display="none";
 }
@@ -936,7 +936,7 @@ document.getElementById("profilePopup").style.display="none";
 /* ANDROID REKLAM ÖDÜLÜ */
 /* ----------------------- */
 
-async function onAdReward(){
+window.onAdReward = async function(){
 
 let falHak = parseInt(localStorage.getItem("falHak")) || 0;
 
@@ -950,9 +950,7 @@ updateFalHakUI();
 
 try{
 
-await fetch(
-"https://falcizade-server-production.up.railway.app/reward-ad",
-{
+await fetchJsonWithTimeout(`${API_BASE}/reward-ad`, {
 method:"POST",
 headers:{
 "Content-Type":"application/json"
@@ -968,4 +966,35 @@ console.log("reward error",e);
 
 }
 
+};
+
+function copyTextToClipboard(text, successMessage){
+if(navigator.clipboard && typeof navigator.clipboard.writeText === "function"){
+navigator.clipboard.writeText(text)
+.then(()=>alert(successMessage))
+.catch(()=>fallbackCopyText(text, successMessage));
+return;
+}
+
+fallbackCopyText(text, successMessage);
+}
+
+function fallbackCopyText(text, successMessage){
+const tempInput = document.createElement("textarea");
+tempInput.value = text;
+tempInput.setAttribute("readonly", "");
+tempInput.style.position = "absolute";
+tempInput.style.left = "-9999px";
+
+document.body.appendChild(tempInput);
+tempInput.select();
+
+try{
+document.execCommand("copy");
+alert(successMessage);
+}catch(_error){
+showError("Link kopyalanamadı. Lütfen manuel olarak kopyalayın.");
+}finally{
+document.body.removeChild(tempInput);
+}
 }
